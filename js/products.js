@@ -701,7 +701,7 @@ const ATYAB_PRODUCTS = [
     nameEn: "Atyab Royal Bakhoor",
     subtitle: "رقائق خشب العود المعتقة المشبعة بالورد الطائفي والعنبر",
     subtitleEn: "Aged Agarwood Chips Infused with Taif Rose & Amber",
-    category: "dakhoon",
+    category: "bakhoor",
     family: "بخور عربي ودخون فاخر للمجالس",
     familyEn: "Arabian Incense & Royal Dakhoon for Majlis",
     priceSAR: 30,

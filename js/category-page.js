@@ -189,7 +189,11 @@ function renderCategoryProducts() {
   // Filter by primary category
   let filtered = allProducts;
   if (currentCategoryFilter && currentCategoryFilter !== "all") {
-    filtered = filtered.filter(p => p.category === currentCategoryFilter);
+    if (currentCategoryFilter === "bakhoor" || currentCategoryFilter === "dakhoon") {
+      filtered = filtered.filter(p => p.category === "bakhoor" || p.category === "dakhoon");
+    } else {
+      filtered = filtered.filter(p => p.category === currentCategoryFilter);
+    }
   }
 
   // Filter by sub-tag (semantic matching across EN and AR)

@@ -202,12 +202,11 @@
       <!-- المستوى الثاني: شريط أقسام الموقع الرسمية لأطياب للعطور -->
       <nav class="header-category-row" aria-label="أقسام المتجر الرسمية">
         <ul class="category-nav-menu" id="header-category-nav-menu">
-          <li class="category-nav-item"><a href="perfumes.html" class="cat-nav-link active" data-cat="perfumes" data-i18n="nav_perfume">عطور</a></li>
-          <li class="category-nav-item"><a href="oils.html" class="cat-nav-link" data-cat="oil" data-i18n="nav_oil_perfume">عطور زيتية</a></li>
-          <li class="category-nav-item"><a href="bakhoor.html" class="cat-nav-link" data-cat="bakhoor" data-i18n="nav_bakhoor">بخور</a></li>
-          <li class="category-nav-item"><a href="creams.html" class="cat-nav-link" data-cat="cream" data-i18n="nav_cream">كريم <span class="nav-badge-new">جديد</span></a></li>
-          <li class="category-nav-item"><a href="gift-sets.html" class="cat-nav-link" data-cat="giftset" data-i18n="nav_gift_sets">أطقم هدايا</a></li>
-          <li class="category-nav-item"><a href="#scent-quiz" class="cat-nav-link" onclick="openScentQuiz(); return false;"><span data-i18n="nav_quiz">مستشار العطور</span> <span class="nav-badge-hot" data-i18n="nav_quiz_badge">اختبار</span></a></li>
+          <li class="category-nav-item"><a href="perfumes.html?cat=perfumes" class="cat-nav-link" data-cat="perfumes" data-i18n="nav_perfume">عطور</a></li>
+          <li class="category-nav-item"><a href="perfumes.html?cat=oil" class="cat-nav-link" data-cat="oil" data-i18n="nav_oil_perfume">عطور زيتية</a></li>
+          <li class="category-nav-item"><a href="perfumes.html?cat=bakhoor" class="cat-nav-link" data-cat="bakhoor" data-i18n="nav_bakhoor">بخور</a></li>
+          <li class="category-nav-item"><a href="perfumes.html?cat=cream" class="cat-nav-link" data-cat="cream" data-i18n="nav_cream">كريم <span class="nav-badge-new">جديد</span></a></li>
+          <li class="category-nav-item"><a href="perfumes.html?cat=giftset" class="cat-nav-link" data-cat="giftset" data-i18n="nav_gift_sets">أطقم هدايا</a></li>
         </ul>
       </nav>
     </div>
@@ -324,28 +323,6 @@
       </div>
     </div>
 
-    <!-- ===================================================================
-         6. بنر مستشار العطور التفاعلي (BESPOKE SCENT ADVISOR BANNER)
-         =================================================================== -->
-    <section class="cat-quiz-strip-section">
-      <div class="container">
-        <div class="cat-quiz-strip-card">
-          <div class="cat-quiz-strip-content">
-            <span class="cat-quiz-pill" data-i18n="quiz_badge">خدمة ملكية مجانية لضيوفنا</span>
-            <h2 class="cat-quiz-title" data-i18n="cat_quiz_strip_title">هل تبحث عن توقيعك العطري الخاص؟</h2>
-            <p class="cat-quiz-desc" data-i18n="cat_quiz_strip_desc">
-              اكتشف العطر الأنسب لشخصيتك ومناسباتك خلال أقل من دقيقة مع مستشار أطياب.
-            </p>
-            <button type="button" class="btn btn-primary cat-quiz-btn" onclick="openScentQuiz()" data-i18n="cat_quiz_strip_btn">
-              ابدأ مستشار العطور ✦
-            </button>
-          </div>
-          <div class="cat-quiz-strip-visual">
-            <img src="assets/images/tiger_oud.jpg" alt="Atyab Royal Perfumes" class="quiz-visual-bottle" loading="lazy" />
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- ===================================================================
@@ -370,11 +347,11 @@
         <h4 data-i18n="footer_col_sections">أقسام المتجر</h4>
         <ul class="footer-links">
           <li><a href="index.html" data-i18n="nav_home">الرئيسية</a></li>
-          <li><a href="perfumes.html" data-i18n="nav_perfume">العطور الملكية</a></li>
-          <li><a href="oils.html" data-i18n="nav_oil_perfume">دهن العود والمسك</a></li>
-          <li><a href="bakhoor.html" data-i18n="footer_bakhoor">بخور ودخون المجالس</a></li>
-          <li><a href="creams.html" data-i18n="nav_cream">كريمات الجسم المعطرة</a></li>
-          <li><a href="gift-sets.html" data-i18n="nav_gift_sets">صناديق الهدايا الفاخرة</a></li>
+          <li><a href="perfumes.html?cat=perfumes" data-i18n="nav_perfume">العطور الملكية</a></li>
+          <li><a href="perfumes.html?cat=oil" data-i18n="nav_oil_perfume">دهن العود والمسك</a></li>
+          <li><a href="perfumes.html?cat=bakhoor" data-i18n="footer_bakhoor">بخور ودخون المجالس</a></li>
+          <li><a href="perfumes.html?cat=cream" data-i18n="nav_cream">كريمات الجسم المعطرة</a></li>
+          <li><a href="perfumes.html?cat=giftset" data-i18n="nav_gift_sets">صناديق الهدايا الفاخرة</a></li>
         </ul>
       </div>
 
@@ -462,12 +439,11 @@
       </div>
 
       <ul class="mobile-nav-list">
-        <li><a href="perfumes.html" onclick="closeMobileNav();"><span class="nav-icon">💎</span><span data-i18n="nav_perfume">عطور</span></a></li>
-        <li><a href="oils.html" onclick="closeMobileNav();"><span class="nav-icon">🧪</span><span data-i18n="nav_oil_perfume">عطور زيتية</span></a></li>
-        <li><a href="bakhoor.html" onclick="closeMobileNav();"><span class="nav-icon">🪵</span><span data-i18n="nav_bakhoor">بخور</span></a></li>
-        <li><a href="creams.html" onclick="closeMobileNav();"><span class="nav-icon">🧴</span><span data-i18n="nav_cream">كريم</span> <span class="nav-badge-new" style="font-size:0.7rem; padding: 2px 6px; background: #C59B27; color:#fff; border-radius:4px; margin-right:4px;">جديد</span></a></li>
-        <li><a href="gift-sets.html" onclick="closeMobileNav();"><span class="nav-icon">🎁</span><span data-i18n="nav_gift_sets">أطقم هدايا</span></a></li>
-        <li><a href="#scent-quiz" onclick="openScentQuiz(); closeMobileNav(); return false;"><span class="nav-icon">🔮</span><span data-i18n="nav_quiz">مستشار العطور</span></a></li>
+        <li><a href="perfumes.html?cat=perfumes" onclick="closeMobileNav();"><span class="nav-icon">💎</span><span data-i18n="nav_perfume">عطور</span></a></li>
+        <li><a href="perfumes.html?cat=oil" onclick="closeMobileNav();"><span class="nav-icon">🧪</span><span data-i18n="nav_oil_perfume">عطور زيتية</span></a></li>
+        <li><a href="perfumes.html?cat=bakhoor" onclick="closeMobileNav();"><span class="nav-icon">🪵</span><span data-i18n="nav_bakhoor">بخور</span></a></li>
+        <li><a href="perfumes.html?cat=cream" onclick="closeMobileNav();"><span class="nav-icon">🧴</span><span data-i18n="nav_cream">كريم</span> <span class="nav-badge-new" style="font-size:0.7rem; padding: 2px 6px; background: #C59B27; color:#fff; border-radius:4px; margin-right:4px;">جديد</span></a></li>
+        <li><a href="perfumes.html?cat=giftset" onclick="closeMobileNav();"><span class="nav-icon">🎁</span><span data-i18n="nav_gift_sets">أطقم هدايا</span></a></li>
         <li><a href="#track-order" onclick="openTrackOrderModal(); closeMobileNav(); return false;"><span class="nav-icon">📦</span><span data-i18n="track_order_btn">تتبع طلبك</span></a></li>
         <li><a href="#store-locator" onclick="openStoreLocatorModal(); closeMobileNav(); return false;"><span class="nav-icon">📍</span><span data-i18n="store_locator_btn">فروعنا بالمملكة</span></a></li>
       </ul>
