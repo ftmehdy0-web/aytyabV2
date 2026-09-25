@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>صناديق الإهداء الملكية الفاخرة | أطياب للعطور ATYAB PERFUMES</title>
+  <meta name="description" content="تسوق أفخم أطقم وصناديق الهدايا الملكية من أطياب للعطور؛ عطور، دهون عود، وبخور في صناديق مخملية فاخرة تليق بأغلى الناس." />
+  <link rel="icon" type="image/svg+xml" href="assets/images/atyab_logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&family=Amiri:ital,wght@0,700;1,400&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="theme-ahmed-maghribi">
+
+  <aside class="announcement-strip" role="region" aria-label="العروض والتوصيل المجاني">
+    <div class="announcement-container container">
+      <div class="announcement-content">
+        <span class="announcement-pulse-dot" aria-hidden="true"></span>
+        <span class="announcement-text-item">
+          شحن مجاني لجميع مناطق المملكة للطلبات فوق <strong>150 ر.س</strong> 🇸🇦 | كود خصم 10%: <strong class="coupon-highlight" onclick="copyCouponCode('ATYAB10')">ATYAB10</strong>
+        </span>
+      </div>
+      <div class="announcement-support-tag">
+        <a href="https://wa.me/966500000000" target="_blank" rel="noopener" class="announcement-link">
+          <span>💬</span>
+          <span>استشارات عطرية فورية عبر واتساب</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <header class="site-header sticky" id="site-header">
+    <div class="container header-inner-container">
+      <div class="header-main-row">
+        <button class="mobile-nav-toggle-btn" id="mobile-nav-toggle-btn" aria-label="فتح القائمة" onclick="toggleMobileNav()">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+
+        <div class="header-left-tools">
+          <div class="header-icons-cluster">
+            <button class="hdr-icon-btn hdr-cart-btn" onclick="openCartDrawer()" title="سلة المشتريات الملكية">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span class="cart-badge-subtle cart-count-badge">0</span>
+            </button>
+            <button class="hdr-icon-btn" onclick="openStoreLocatorModal()" title="فروعنا بالمملكة">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </button>
+            <button class="hdr-icon-btn account-action-btn" id="account-action-btn" onclick="openAccountModal()" title="حسابي">
+              <svg id="account-action-icon" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </button>
+          </div>
+          <div class="hdr-search-box">
+            <input type="text" class="hdr-search-input" id="hdr-search-input" placeholder="SEARCH" onkeydown="if(event.key==='Enter') handleHeaderSearch()" />
+            <button class="hdr-search-btn" onclick="handleHeaderSearch()">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <a href="index.html" class="header-center-branding">
+          <img src="assets/images/atyab_logo.svg" alt="أطياب للعطور" class="brand-emblem-logo-img" />
+        </a>
+
+        <div class="header-right-tools">
+          <div class="hdr-dropdown-wrapper" id="hdr-lang-dropdown">
+            <button class="hdr-dropdown-trigger" onclick="toggleHdrLang(event)">
+              <span id="hdr-lang-current">عربي</span>
+              <svg class="dropdown-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="hdr-dropdown-menu">
+              <button class="hdr-dropdown-item active" data-lang="ar" onclick="switchLanguage('ar')"><span>عربي</span><span class="check-icon">✓</span></button>
+              <button class="hdr-dropdown-item" data-lang="en" onclick="switchLanguage('en')"><span>English</span><span class="check-icon">✓</span></button>
+            </div>
+          </div>
+          <div class="hdr-dropdown-wrapper" id="hdr-country-dropdown">
+            <button class="hdr-dropdown-trigger" onclick="toggleHdrCountry(event)">
+              <span id="hdr-country-current">KSA</span>
+              <svg class="dropdown-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="hdr-dropdown-menu">
+              <button class="hdr-dropdown-item active" data-country="KSA" onclick="selectHdrCountry('KSA', 'SAR')"><span>🇸🇦 KSA</span><span class="check-icon">✓</span></button>
+              <button class="hdr-dropdown-item" data-country="UAE" onclick="selectHdrCountry('UAE', 'AED')"><span>🇦🇪 UAE</span><span class="check-icon">✓</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="header-category-row" aria-label="أقسام المتجر الرسمية">
+        <ul class="category-nav-menu" id="header-category-nav-menu">
+          <li class="category-nav-item"><a href="perfumes.html" class="cat-nav-link" data-cat="perfumes">عطور</a></li>
+          <li class="category-nav-item"><a href="oils.html" class="cat-nav-link" data-cat="oil">عطور زيتية</a></li>
+          <li class="category-nav-item"><a href="bakhoor.html" class="cat-nav-link" data-cat="bakhoor">بخور</a></li>
+          <li class="category-nav-item"><a href="creams.html" class="cat-nav-link" data-cat="cream">كريم <span class="nav-badge-new">جديد</span></a></li>
+          <li class="category-nav-item"><a href="gift-sets.html" class="cat-nav-link active" data-cat="giftset">أطقم هدايا</a></li>
+          <li class="category-nav-item"><a href="#scent-quiz" class="cat-nav-link" onclick="openScentQuiz(); return false;"><span>مستشار العطور</span> <span class="nav-badge-hot">اختبار</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="cat-page-wrapper">
+    <section class="cat-page-hero">
+      <div class="container">
+        <nav class="cat-page-breadcrumbs">
+          <a href="index.html">الرئيسية</a>
+          <span class="sep">/</span>
+          <span class="current">صناديق الهدايا الفاخرة</span>
+        </nav>
+
+        <div class="cat-hero-title-group">
+          <div class="cat-hero-pill">
+            <span>🎁</span>
+            <span>فن الإهداء الملكي لأصحاب المقام الرفيع</span>
+          </div>
+          <h1 class="cat-hero-title">
+            صناديق الإهداء الملكية
+            <span class="gold-accent" style="color: var(--gold-vibrant); font-family: var(--font-calligraphy); font-size: 0.9em; display: block;">هدية تخلد أثرك وتبهج قلوب أحبابك</span>
+          </h1>
+          <p class="cat-hero-desc">
+            صناديق جلدية مخملية تجمع أرقى عطور أطياب وتولات دهن العود والمباخر الكريستالية، مغلفة بشرائط ذهبية جاهزة للإهداء الفوري مع بطاقة تهنئة راقية.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cat-toolbar">
+      <div class="container cat-toolbar-inner">
+        <div class="cat-count-info">
+          <span>المعروض:</span>
+          <span class="cat-count-num" id="cat-count-num">جاري التحميل...</span>
+        </div>
+
+        <div class="cat-filters-group">
+          <button type="button" class="cat-filter-btn active" onclick="filterCategoryByTag('all', this)">الكل</button>
+          <button type="button" class="cat-filter-btn" onclick="filterCategoryByTag('طقم', this)">أطقم كبار الشخصيات</button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label for="cat-sort-select" style="font-size: 0.82rem; font-weight: 700; color: #666;">ترتيب:</label>
+          <select id="cat-sort-select" onchange="sortCategoryProducts(this.value)" style="padding: 7px 12px; border-radius: 6px; border: 1px solid var(--border-light); font-size: 0.82rem; font-family: var(--font-main); background: #FFF; font-weight: 700;">
+            <option value="featured">المقترح والمميز</option>
+            <option value="price-asc">السعر: من الأقل للأعلى</option>
+            <option value="price-desc">السعر: من الأعلى للأقل</option>
+            <option value="rating">الأعلى تقييماً ★</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="cat-products-grid" id="category-products-container">
+        <!-- Products injected via category-page.js -->
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main-content">
+      <div class="footer-brand-col">
+        <a href="index.html" class="footer-logo-link">
+          <img src="assets/images/atyab_logo.svg" alt="أطياب للعطور" class="footer-logo-img" />
+        </a>
+        <p class="footer-about-text">أطياب للعطور - صياغة التراث العربي الملكي بلمسة عصرية مبتكرة منذ أكثر من 25 عاماً.</p>
+      </div>
+      <div class="footer-links-col">
+        <h4 class="footer-heading">أقسام المتجر</h4>
+        <ul class="footer-menu">
+          <li><a href="perfumes.html">العطور الملكية</a></li>
+          <li><a href="oils.html">دهن العود والمسك</a></li>
+          <li><a href="bakhoor.html">بخور ودخون المجالس</a></li>
+          <li><a href="creams.html">كريمات الجسم المعطرة</a></li>
+          <li><a href="gift-sets.html">صناديق الإهداء الفاخرة</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom-bar"><div class="container footer-bottom-inner"><p class="copyright-text">© 2026 أطياب للعطور | ATYAB PERFUMES. جميع الحقوق محفوظة.</p></div></div>
+  </footer>
+
+  <div class="cart-drawer-overlay" id="cart-drawer-overlay" onclick="closeCartDrawer()"></div>
+  <aside class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <div class="cart-drawer-title-box"><h3>حقيبة المشتريات الملكية (<span class="cart-count-badge">0</span>)</h3></div>
+      <button class="cart-drawer-close-btn" onclick="closeCartDrawer()">✕</button>
+    </div>
+    <div class="shipping-meter-box"><div class="shipping-meter-bar"><div class="shipping-meter-progress" id="shipping-meter-progress"></div></div><p class="shipping-meter-text" id="shipping-meter-text"></p></div>
+    <div class="cart-drawer-items" id="cart-drawer-items"></div>
+    <div class="cart-drawer-footer">
+      <div class="cart-summary-line"><span>المجموع:</span><strong id="cart-total" style="color:var(--gold-deep);">0 ر.س</strong></div>
+      <button class="btn btn-primary" onclick="openCheckoutModal()" style="width:100%; margin-top:12px; padding:12px;">🛍️ متابعة الطلب والدفع</button>
+    </div>
+  </aside>
+
+  <div id="toast-container" class="toast-container"></div>
+  <script src="js/translations.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/firebase.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/category-page.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      initCategoryPage("giftset");
+      updateCartUI();
+    });
+  </script>
+</body>
+</html>

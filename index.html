@@ -2,6 +2,27 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    (function() {
+      try {
+        var sp = new URLSearchParams(window.location.search);
+        var qLang = sp.get('lang');
+        var sLang = localStorage.getItem('atyab_language') || localStorage.getItem('aytyab_language');
+        var lang = (qLang === 'ar' || qLang === 'en') ? qLang : (sLang || 'ar');
+        if (lang === 'en') {
+          document.documentElement.lang = 'en';
+          document.documentElement.dir = 'ltr';
+          document.documentElement.classList.add('lang-en');
+          document.documentElement.classList.remove('lang-ar');
+        } else {
+          document.documentElement.lang = 'ar';
+          document.documentElement.dir = 'rtl';
+          document.documentElement.classList.add('lang-ar');
+          document.documentElement.classList.remove('lang-en');
+        }
+      } catch(e) {}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>أطياب للعطور | المتجر الرسمي بالمملكة العربية السعودية | عطور تدوم طويلاً</title>
   <meta name="description" content="تسوق أفخم العطور الشرقية الملكية، دهن العود الكمبودي الفاخر، والبخور العربي الأصيل من أطياب للعطور بالمملكة العربية السعودية. تايقر عود، نادر، مون فلاور، مشاعر، أ. 555 وبخور أطياب." />
@@ -13,105 +34,197 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ar_SA" />
 
-  <!-- Google Fonts: Tajawal, Cairo & Amiri for Arabic Luxury Calligraphy -->
+  <!-- Google Fonts: Tajawal, Cairo, Amiri & Outfit for English Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,700;1,400&family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,700;1,400&family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
 
   <!-- Stylesheet (Ahmed Al Maghribi KSA Theme) -->
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="preload" as="image" href="assets/images/hero_slide_1.jpg" fetchpriority="high" />
+
+  <!-- Critical Anti-Flicker Guard & Mobile Overflow Protection -->
+  <style>
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+    }
+    .cart-drawer:not(.active),
+    .drawer-backdrop:not(.active),
+    .mobile-nav-drawer:not(.active),
+    .mobile-nav-backdrop:not(.active),
+    .modal-overlay:not(.active) {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+  </style>
 </head>
 <body>
 
   <!-- ===================================================================
        1. شريط الإعلانات العلوي (TOP ANNOUNCEMENT BAR)
        =================================================================== -->
+  <!-- ===================================================================
+       1. شريط الإعلانات والخدمات العلوي (TOP UTILITY & ANNOUNCEMENT BAR)
+       =================================================================== -->
   <div class="announcement-bar">
     <div class="announcement-inner container">
-      <div class="announcement-text">
+      <div class="announcement-text" id="announcement-text-container">
         <span>✨</span>
-        <span>شحن مجاني لجميع مناطق المملكة للطلبات فوق <strong>150 ر.س</strong> 🇸🇦 | خصم إضافي <strong>10%</strong> باستخدام كود:</span>
-        <span class="accent">AYTYAB10</span>
+        <span data-i18n="announcement_text">شحن مجاني لجميع مناطق المملكة للطلبات فوق <strong>150 ر.س</strong> 🇸🇦 | خصم إضافي <strong>10%</strong> كود:</span>
+        <span class="accent">ATYAB10</span>
       </div>
 
-      <div class="currency-selector">
-        <label for="currency-select">العملة:</label>
-        <select id="currency-select">
-          <option value="SAR" selected>ريال سعودي (ر.س)</option>
-          <option value="AED">درهم إماراتي (د.إ)</option>
-          <option value="USD">دولار أمريكي ($)</option>
-        </select>
-      </div>
+      <a href="#track-order" class="track-order-top-link" onclick="openTrackOrderModal(); return false;" title="تتبع طلبك" data-i18n-title="track_order_btn">
+        <span>📦</span>
+        <span data-i18n="track_order_btn">تتبع طلبك</span>
+      </a>
     </div>
   </div>
 
   <!-- ===================================================================
-       2. الترويسة الرئيسية الرسمية (MAIN LUXURY HEADER)
+       2. الترويسة الرئيسية الفاخرة على طراز أحمد المغربي لشعار أطياب
+          (ATYAB PERFUME LUXURY HEADER - AHMED MAGHRIBI ARCHITECTURE)
        =================================================================== -->
-  <header class="main-header">
-    <div class="header-container container">
-      <!-- زر قائمة الجوال والبحث -->
-      <button class="menu-toggle" onclick="openSearchModal()" title="بحث" aria-label="بحث">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-      </button>
+  <header class="main-header" id="site-header">
+    <div class="container">
+      <!-- المستوى الأول: الأدوات، الشعار، ومحددات اللغة والدولة -->
+      <div class="header-main-row">
+        <!-- زر قائمة الجوال (HAMBURGER MENU ON MOBILE) -->
+        <button class="menu-toggle" onclick="openMobileNav()" title="القائمة الرئيسية" aria-label="القائمة الرئيسية">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
 
-      <!-- شعار أطياب للعطور -->
-      <a href="#" class="brand-logo">
-        <span class="brand-arabic">أطـيـاب للعـطـور</span>
-        <span class="brand-title">AYTYAB PERFUMES</span>
-        <span class="brand-tagline">ROYAL ARABIAN LUXURY • EST. 1988</span>
-      </a>
+        <!-- الجانب الأيسر: الأيقونات (السلة، الفروع، الحساب) + مربع البحث المستطيل -->
+        <div class="header-left-tools">
+          <div class="header-icons-cluster">
+            <!-- 1. سلة المشتريات مع الشارة الذهبية المطابقة للصورة المرجعية -->
+            <button class="hdr-icon-btn hdr-cart-btn" onclick="openCartDrawer()" title="سلة المشتريات الملكية" aria-label="السلة" data-i18n-title="cart_tooltip">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span class="cart-badge-subtle cart-count-badge">0</span>
+            </button>
 
-      <!-- القائمة الرئيسية -->
-      <nav>
-        <ul class="nav-menu">
-          <li><a href="#hero" class="nav-link active">الرئيسية</a></li>
-          <li><a href="#showcase" class="nav-link">مقدَّر من الجميع</a></li>
-          <li><a href="#best-sellers" class="nav-link">الأكثر مبيعاً</a></li>
-          <li><a href="#catalog" class="nav-link">جميع العطور</a></li>
-          <li><a href="#bakhoor" class="nav-link">بخور ودخون</a></li>
-          <li><a href="#scent-quiz" class="nav-link" onclick="openScentQuiz(); return false;">مستشار العطور <span class="nav-badge-hot">اختبار</span></a></li>
-          <li><a href="#reviews" class="nav-link">آراء العملاء</a></li>
+            <!-- 2. فروع ومعارض المملكة (STORE LOCATOR) -->
+            <button class="hdr-icon-btn" onclick="openStoreLocatorModal()" title="فروعنا بالمملكة" aria-label="فروعنا بالمملكة" data-i18n-title="store_locator_btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </button>
+
+            <!-- 3. الحساب الشخصي (USER ACCOUNT) -->
+            <button class="hdr-icon-btn account-action-btn" id="account-action-btn" onclick="openAccountModal()" title="حسابي" aria-label="حسابي" data-i18n-title="account_tooltip">
+              <svg id="account-action-icon" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span class="account-initial" id="account-action-initial" hidden aria-hidden="true"></span>
+            </button>
+          </div>
+
+          <!-- مربع البحث المستطيل بنص SEARCH وأيقونة العدسة -->
+          <div class="hdr-search-box">
+            <input type="text" class="hdr-search-input" id="hdr-search-input" placeholder="SEARCH" aria-label="Search" data-i18n-placeholder="header_search_placeholder" onkeydown="if(event.key==='Enter') handleHeaderSearch()" />
+            <button class="hdr-search-btn" onclick="handleHeaderSearch()" aria-label="Search" title="Search">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- الوسط: شعار أطياب للعطور الملكي المصمم على طراز أحمد المغربي الفاخر -->
+        <a href="index.html" class="header-center-branding" aria-label="أطياب للعطور | ATYAB PERFUME">
+          <img src="assets/images/atyab_logo.svg" alt="أطياب للعطور | ATYAB PERFUME" class="brand-emblem-logo-img" />
+        </a>
+
+        <!-- الجانب الأيمن: قوائم اختيار اللغة والدولة والعملة -->
+        <div class="header-right-tools">
+          <!-- قائمة تبديل اللغة (عربي ∨ / English ∨) -->
+          <div class="hdr-dropdown-wrapper" id="hdr-lang-dropdown">
+            <button class="hdr-dropdown-trigger" onclick="toggleHdrLang(event)" aria-label="اختر اللغة / Select Language">
+              <span id="hdr-lang-current">عربي</span>
+              <svg class="dropdown-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="hdr-dropdown-menu">
+              <button class="hdr-dropdown-item active" data-lang="ar" onclick="switchLanguage('ar')">
+                <span>عربي (العربية)</span>
+                <span class="check-icon">✓</span>
+              </button>
+              <button class="hdr-dropdown-item" data-lang="en" onclick="switchLanguage('en')">
+                <span>English</span>
+                <span class="check-icon">✓</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- قائمة اختيار الدولة والمنطقة (KSA ∨ / GCC) -->
+          <div class="hdr-dropdown-wrapper" id="hdr-country-dropdown">
+            <button class="hdr-dropdown-trigger" onclick="toggleHdrCountry(event)" aria-label="الدولة / Country">
+              <span id="hdr-country-current">KSA</span>
+              <svg class="dropdown-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="hdr-dropdown-menu">
+              <button class="hdr-dropdown-item active" data-country="KSA" onclick="selectHdrCountry('KSA', 'SAR')">
+                <span>🇸🇦 المملكة العربية السعودية (KSA)</span>
+                <span class="check-icon">✓</span>
+              </button>
+              <button class="hdr-dropdown-item" data-country="UAE" onclick="selectHdrCountry('UAE', 'AED')">
+                <span>🇦🇪 الإمارات العربية المتحدة (UAE)</span>
+                <span class="check-icon">✓</span>
+              </button>
+              <button class="hdr-dropdown-item" data-country="KWT" onclick="selectHdrCountry('KWT', 'SAR')">
+                <span>🇰🇼 الكويت (Kuwait)</span>
+                <span class="check-icon">✓</span>
+              </button>
+              <button class="hdr-dropdown-item" data-country="BHR" onclick="selectHdrCountry('BHR', 'SAR')">
+                <span>🇧🇭 البحرين (Bahrain)</span>
+                <span class="check-icon">✓</span>
+              </button>
+              <button class="hdr-dropdown-item" data-country="OMN" onclick="selectHdrCountry('OMN', 'SAR')">
+                <span>🇴🇲 عُمان (Oman)</span>
+                <span class="check-icon">✓</span>
+              </button>
+              <button class="hdr-dropdown-item" data-country="QAT" onclick="selectHdrCountry('QAT', 'SAR')">
+                <span>🇶🇦 قطر (Qatar)</span>
+                <span class="check-icon">✓</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- المستوى الثاني: شريط أقسام الموقع الرسمية لأطياب للعطور -->
+      <nav class="header-category-row" aria-label="أقسام المتجر الرسمية">
+        <ul class="category-nav-menu" id="header-category-nav-menu">
+          <li class="category-nav-item"><a href="perfumes.html" class="cat-nav-link" data-cat="perfumes" data-i18n="nav_perfume">عطور</a></li>
+          <li class="category-nav-item"><a href="oils.html" class="cat-nav-link" data-cat="oil" data-i18n="nav_oil_perfume">عطور زيتية</a></li>
+          <li class="category-nav-item"><a href="bakhoor.html" class="cat-nav-link" data-cat="bakhoor" data-i18n="nav_bakhoor">بخور</a></li>
+          <li class="category-nav-item"><a href="creams.html" class="cat-nav-link" data-cat="cream" data-i18n="nav_cream">كريم <span class="nav-badge-new">جديد</span></a></li>
+          <li class="category-nav-item"><a href="gift-sets.html" class="cat-nav-link" data-cat="giftset" data-i18n="nav_gift_sets">أطقم هدايا</a></li>
+          <li class="category-nav-item"><a href="#scent-quiz" class="cat-nav-link" onclick="openScentQuiz(); return false;"><span data-i18n="nav_quiz">مستشار العطور</span> <span class="nav-badge-hot" data-i18n="nav_quiz_badge">اختبار</span></a></li>
         </ul>
       </nav>
-
-      <!-- أدوات الترويسة (بحث، مفضلة، سلة) -->
-      <div class="header-actions">
-        <!-- البحث السريع -->
-        <button class="action-btn" onclick="openSearchModal()" title="البحث في العطور" aria-label="البحث">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </button>
-
-        <!-- قائمة المفضلة -->
-        <button class="action-btn" onclick="openWishlistModal()" title="قائمة المفضلة" aria-label="المفضلة">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-          <span class="badge-count wishlist-count-badge">0</span>
-        </button>
-
-        <!-- سلة المشتريات -->
-        <button class="action-btn" onclick="openCartDrawer()" title="سلة المشتريات الملكية" aria-label="السلة">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-          </svg>
-          <span class="badge-count cart-count-badge">0</span>
-        </button>
-      </div>
     </div>
   </header>
 
   <!-- ===================================================================
        3. الواجهة البانورامية العريضة (CINEMATIC WIDE HERO SLIDER)
-       على طراز أحمد المغربي KSA مع صور عريضة للمنتجات الملكية
        =================================================================== -->
   <section class="hero-slider-section" id="hero">
     <div class="hero-slider-container">
@@ -123,27 +236,27 @@
           <div class="hero-slide-content">
             <div class="hero-slide-pill">
               <span>✨</span>
-              <span>الإصدارات الملكية الخاصة بالمملكة لعام ٢٠٢٦</span>
+              <span data-i18n="hero_slide1_pill">الإصدارات الملكية الخاصة بالمملكة لعام ٢٠٢٦</span>
             </div>
             <h1 class="hero-slide-title">
-              عطورٌ تدوم طويلاً
-              <span class="gold-accent">في كل قطرة</span>
+              <span data-i18n="hero_slide1_title">عطورٌ تدوم طويلاً</span>
+              <span class="gold-accent" data-i18n="hero_slide1_title_accent">في كل قطرة</span>
             </h1>
-            <p class="hero-slide-desc">
+            <p class="hero-slide-desc" data-i18n="hero_slide1_desc">
               صياغة استثنائية تجمع نبل العود الكمبودي النادر وزعفران قصر الملوك مع هيبة عطر نادر؛ حضور يفرض وقاره في أرقى المحافل والمناسبات.
             </p>
             <div class="hero-slide-ctas">
               <a href="#catalog" class="btn-hero-primary">
-                <span>تسوق التشكيلة الملكية</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span data-i18n="hero_slide1_cta">تسوق التشكيلة الملكية</span>
+                <svg class="cta-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="19" y1="12" x2="5" y2="12"></line>
                   <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
               </a>
-              <button class="btn-hero-outline" onclick="openQuickView('atyab-tiger-oud')">
-                <span>نظرة سريعة على تايقر عود</span>
+              <a href="product.html?id=atyab-tiger-oud" class="btn-hero-outline">
+                <span data-i18n="hero_slide1_quickview">صفحة عطر تايقر عود</span>
                 <span>⚜️</span>
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -157,27 +270,27 @@
           <div class="hero-slide-content">
             <div class="hero-slide-pill">
               <span>🌙</span>
-              <span>سحر الأنوثة والأناقة الليلية الخالدة</span>
+              <span data-i18n="hero_slide2_pill">سحر الأنوثة والأناقة الليلية الخالدة</span>
             </div>
             <h2 class="hero-slide-title">
-              عبق الزهور النادرة
-              <span class="gold-accent">وجاذبية تأسر القلوب</span>
+              <span data-i18n="hero_slide2_title">عبق الزهور النادرة</span>
+              <span class="gold-accent" data-i18n="hero_slide2_title_accent">وجاذبية تأسر القلوب</span>
             </h2>
-            <p class="hero-slide-desc">
+            <p class="hero-slide-desc" data-i18n="hero_slide2_desc">
               تألقي برائحة زهر القمر الليلي، نيرولي دمشقي فواح، وبتلات الورد المخملي مع لمسات الفانيليا والعنبر الأبيض النقي.
             </p>
             <div class="hero-slide-ctas">
               <a href="#catalog" class="btn-hero-primary" onclick="filterByCategory('fresh')">
-                <span>استكشف العطور الزهرية</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span data-i18n="hero_slide2_cta">استكشف العطور الزهرية</span>
+                <svg class="cta-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="19" y1="12" x2="5" y2="12"></line>
                   <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
               </a>
-              <button class="btn-hero-outline" onclick="openQuickView('atyab-moon-flower')">
-                <span>تفاصيل مون فلاور</span>
+              <a href="product.html?id=atyab-moon-flower" class="btn-hero-outline">
+                <span data-i18n="hero_slide2_quickview">تفاصيل مون فلاور</span>
                 <span>🌸</span>
-              </button>
+              </a>
             </div>
           </div>
         </div>
@@ -191,106 +304,357 @@
           <div class="hero-slide-content">
             <div class="hero-slide-pill">
               <span>🕌</span>
-              <span>كرم الضيافة العربية وفخامة المجالس</span>
+              <span data-i18n="hero_slide3_pill">كرم الضيافة العربية وفخامة المجالس</span>
             </div>
             <h2 class="hero-slide-title">
-              جوهر الدخون الملكي
-              <span class="gold-accent">وانتعاش نسيم البحر</span>
+              <span data-i18n="hero_slide3_title">جوهر الدخون الملكي</span>
+              <span class="gold-accent" data-i18n="hero_slide3_title_accent">وانتعاش أ. 555</span>
             </h2>
-            <p class="hero-slide-desc">
-              بخور أطياب المعتق بخشب العود المروكي الفاخر وعطر أ. 555 البحري؛ التوليفة المثالية للترحيب بضيوفك بأرقى الروائح الأصيلة.
+            <p class="hero-slide-desc" data-i18n="hero_slide3_desc">
+              أصالة بخور المجالس الخليجية بدقة العود المروكي الفاخر، مع انتعاش الليمون الإيطالي واللافندر والباتشولي لإشراقة يومية متجددة.
             </p>
             <div class="hero-slide-ctas">
-              <a href="#bakhoor" class="btn-hero-primary">
-                <span>تسوق البخور والدخون</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <a href="bakhoor.html" class="btn-hero-primary">
+                <span data-i18n="hero_slide3_cta">اكتشف روعة البخور</span>
+                <svg class="cta-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="19" y1="12" x2="5" y2="12"></line>
                   <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
               </a>
-              <button class="btn-hero-outline" onclick="addToCart('atyab-backhoor', '100 جرام', 1)">
-                <span>أضف البخور إلى السلة</span>
-                <span>💨</span>
-              </button>
+              <a href="product.html?id=atyab-bakhoor" class="btn-hero-outline">
+                <span data-i18n="hero_slide3_quickview">بخور أطياب الملكي</span>
+                <span>🔥</span>
+              </a>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- أسهم التحكم بالسلايدر -->
-      <button class="hero-slider-arrow prev" onclick="changeHeroSlide(-1)" aria-label="الشريحة السابقة">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </button>
-      <button class="hero-slider-arrow next" onclick="changeHeroSlide(1)" aria-label="الشريحة التالية">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-      </button>
+    <!-- أزرار التحكم بالشرائح -->
+    <button class="hero-slider-nav hero-nav-prev" id="heroPrev" aria-label="الشريحة السابقة">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+    <button class="hero-slider-nav hero-nav-next" id="heroNext" aria-label="الشريحة التالية">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
 
-      <!-- مؤشرات النقاط -->
-      <div class="hero-slider-dots">
-        <div class="hero-dot active" onclick="goToHeroSlide(0)"></div>
-        <div class="hero-dot" onclick="goToHeroSlide(1)"></div>
-        <div class="hero-dot" onclick="goToHeroSlide(2)"></div>
-      </div>
+    <!-- مؤشرات الشرائح -->
+    <div class="hero-slider-dots" id="heroDots">
+      <button class="hero-dot active" data-index="0" aria-label="الشريحة 1"></button>
+      <button class="hero-dot" data-index="1" aria-label="الشريحة 2"></button>
+      <button class="hero-dot" data-index="2" aria-label="الشريحة 3"></button>
     </div>
   </section>
 
-  <!-- ===================================================================
-       3.1 دوائر التصنيفات السريعة (CATEGORY BUBBLES - AHMED AL MAGHRIBI)
+  
+
+<!-- ===================================================================
+       4. مقدَّر ومحبوب من الجميع (CHERISHED BY ALL - SIGNATURE SHOWCASE)
        =================================================================== -->
-  <section class="category-bubbles-section">
+  <section class="cherished-section" id="cherished">
     <div class="container">
-      <div class="category-bubbles-grid">
-        <div class="category-bubble-card" onclick="filterByCategory('all')">
-          <div class="category-bubble-avatar">
-            <img src="assets/images/tiger_oud.jpg" alt="جميع العطور" />
+      <div class="cherished-header">
+        <span class="cherished-subtitle" data-i18n="cherished_subtitle">عطورٌ تدوم طويلاً في كل قطرة</span>
+        <h2 class="cherished-title" data-i18n="cherished_title">مقدَّر ومحبوب من الجميع</h2>
+        <div class="gold-line" style="margin: 0 auto 16px;"></div>
+        <p class="cherished-desc" data-i18n="cherished_desc">
+          الإصدارات الأكثر شهرة وشغفاً في المملكة العربية السعودية والخليج العربي؛ حضور يفرض وقاره وأثرٌ لا يُنسى في الذاكرة.
+        </p>
+      </div>
+
+      <div class="cherished-grid">
+        <!-- 1. عطر مرج الملكي -->
+        <div class="cherished-card">
+          <div class="cherished-card-media">
+            <span class="cherished-badge" data-i18n="cherished_marj_badge">الأكثر طلباً 🔥</span>
+            <img src="assets/images/marj.jpg" alt="عطر مرج الملكي" loading="lazy" />
           </div>
-          <span class="category-bubble-title">جميع العطور</span>
+          <div class="cherished-card-content">
+            <h3 class="cherished-item-title" data-i18n="cherished_marj_title">عطر أطياب مرج (Marj)</h3>
+            <p class="cherished-item-notes" data-i18n="cherished_marj_notes">زعفران أحمر، توت بري، ورد جوري، وعود كمبودي مدخن</p>
+            <div class="cherished-item-price-row">
+              <span class="cherished-current-price">45 ر.س</span>
+              <span class="cherished-old-price">65 ر.س</span>
+            </div>
+            <div class="cherished-actions">
+              <button type="button" class="btn-cherished-cart" onclick="addToCart('atyab-marj', 'قارورة 100 مل (الحجم الرسمي)', 1)">
+                <span data-i18n="cherished_add_cart">🛍️ أضف للسلة</span>
+              </button>
+              <a href="product.html?id=atyab-marj" class="btn-cherished-view" title="تفاصيل العطر" data-i18n-title="cherished_details_title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div class="category-bubble-card" onclick="filterByCategory('oud')">
-          <div class="category-bubble-avatar">
-            <img src="assets/images/tiger_oud.jpg" alt="العود الملكي" />
+        <!-- 2. عطر تايقر عود -->
+        <div class="cherished-card">
+          <div class="cherished-card-media">
+            <span class="cherished-badge" data-i18n="cherished_tiger_badge">فوحان أسطوري ⚜️</span>
+            <img src="assets/images/tiger_oud.jpg" alt="عطر تايقر عود" loading="lazy" />
           </div>
-          <span class="category-bubble-title">العود ودهن العود</span>
+          <div class="cherished-card-content">
+            <h3 class="cherished-item-title" data-i18n="cherished_tiger_title">تايقر عود (Tiger Oud)</h3>
+            <p class="cherished-item-notes" data-i18n="cherished_tiger_notes">عود كمبودي بري، زعفران فارسي، وعنبر مدخن عتيق</p>
+            <div class="cherished-item-price-row">
+              <span class="cherished-current-price">40 ر.س</span>
+              <span class="cherished-old-price">60 ر.س</span>
+            </div>
+            <div class="cherished-actions">
+              <button type="button" class="btn-cherished-cart" onclick="addToCart('atyab-tiger-oud', 'قارورة 110 مل (الحجم الرسمي)', 1)">
+                <span data-i18n="cherished_add_cart">🛍️ أضف للسلة</span>
+              </button>
+              <a href="product.html?id=atyab-tiger-oud" class="btn-cherished-view" title="تفاصيل العطر" data-i18n-title="cherished_details_title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div class="category-bubble-card" onclick="filterByCategory('oriental')">
-          <div class="category-bubble-avatar">
-            <img src="assets/images/nader.jpg" alt="العطور الشرقية" />
+        <!-- 3. عطر كاف المنعش -->
+        <div class="cherished-card">
+          <div class="cherished-card-media">
+            <span class="cherished-badge" data-i18n="cherished_kaaf_badge">انتعاش الصيف 🌊</span>
+            <img src="assets/images/kaaf.jpg" alt="عطر كاف المنعش" loading="lazy" />
           </div>
-          <span class="category-bubble-title">العطور الشرقية</span>
+          <div class="cherished-card-content">
+            <h3 class="cherished-item-title" data-i18n="cherished_kaaf_title">عطر أطياب كاف (Kaaf)</h3>
+            <p class="cherished-item-notes" data-i18n="cherished_kaaf_notes">بطيخ أحمر مثلج، خزامى بروفانس، ونفحات نسيم البحر</p>
+            <div class="cherished-item-price-row">
+              <span class="cherished-current-price">42 ر.س</span>
+              <span class="cherished-old-price">60 ر.س</span>
+            </div>
+            <div class="cherished-actions">
+              <button type="button" class="btn-cherished-cart" onclick="addToCart('atyab-kaaf', 'قارورة 100 مل (الحجم الرسمي)', 1)">
+                <span data-i18n="cherished_add_cart">🛍️ أضف للسلة</span>
+              </button>
+              <a href="product.html?id=atyab-kaaf" class="btn-cherished-view" title="تفاصيل العطر" data-i18n-title="cherished_details_title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
 
-        <div class="category-bubble-card" onclick="filterByCategory('fresh')">
-          <div class="category-bubble-avatar">
-            <img src="assets/images/moon_flower.jpg" alt="الزهور والانتعاش" />
+        <!-- 4. عطر بن شيخ الأسطوري -->
+        <div class="cherished-card">
+          <div class="cherished-card-media">
+            <span class="cherished-badge" data-i18n="cherished_bin_shaikh_badge">توقيع الملوك 👑</span>
+            <img src="assets/images/bin_shaikh.jpg" alt="عطر بن شيخ" loading="lazy" />
           </div>
-          <span class="category-bubble-title">عطور الزهور</span>
-        </div>
-
-        <div class="category-bubble-card" onclick="filterByCategory('oud')">
-          <div class="category-bubble-avatar">
-            <img src="assets/images/backhoor.jpg" alt="بخور ودخون" />
+          <div class="cherished-card-content">
+            <h3 class="cherished-item-title" data-i18n="cherished_bin_shaikh_title">بن شيخ (Bin Shaikh)</h3>
+            <p class="cherished-item-notes" data-i18n="cherished_bin_shaikh_notes">دهن عود هندي أصيل، بخور ملكي مدخن، وزعفران قائنات</p>
+            <div class="cherished-item-price-row">
+              <span class="cherished-current-price">48 ر.س</span>
+              <span class="cherished-old-price">70 ر.س</span>
+            </div>
+            <div class="cherished-actions">
+              <button type="button" class="btn-cherished-cart" onclick="addToCart('atyab-bin-shaikh', 'قارورة 100 مل (الحجم الرسمي)', 1)">
+                <span data-i18n="cherished_add_cart">🛍️ أضف للسلة</span>
+              </button>
+              <a href="product.html?id=atyab-bin-shaikh" class="btn-cherished-view" title="تفاصيل العطر" data-i18n-title="cherished_details_title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </a>
+            </div>
           </div>
-          <span class="category-bubble-title">بخور ودخون</span>
-        </div>
-
-        <div class="category-bubble-card" onclick="filterByCategory('all')">
-          <div class="category-bubble-avatar">
-            <img src="assets/images/mashair.jpg" alt="الأكثر مبيعاً" />
-          </div>
-          <span class="category-bubble-title">الأكثر مبيعاً</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ===================================================================
-       4. شريط الثقة والضمانات (TRUST STRIP)
+       5. أقسام المتجر المرئية الفاخرة (CURATED LUXURY CATEGORY BANNERS)
+       =================================================================== -->
+  <section class="luxury-categories-section">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+        <span class="section-subtitle" data-i18n="lux_cat_subtitle">روائع الدار الملكية</span>
+        <h2 class="section-title" data-i18n="lux_cat_title">استكشف التشكيلات الحصرية</h2>
+        <div class="gold-line" style="margin: 0 auto;"></div>
+      </div>
+
+      <div class="lux-cat-grid">
+        <!-- 1. العطور الملكية -->
+        <a href="perfumes.html" class="lux-cat-card">
+          <img src="assets/images/tiger_oud.jpg" alt="العطور الملكية" class="lux-cat-bg" loading="lazy" />
+          <div class="lux-cat-overlay"></div>
+          <div class="lux-cat-content">
+            <span class="lux-cat-pill" data-i18n="lux_cat_perfumes_pill">⚜️ أو دو بارفان ملكي</span>
+            <h3 class="lux-cat-name" data-i18n="lux_cat_perfumes_name">العطور الملكية</h3>
+            <p class="lux-cat-desc" data-i18n="lux_cat_perfumes_desc">توليفات شرقية وفرنسية آسرة تدوم لأكثر من 18 ساعة على الأقمشة.</p>
+            <span class="lux-cat-cta-link" data-i18n="lux_cat_perfumes_cta">تسوق العطور ←</span>
+          </div>
+        </a>
+
+        <!-- 2. كريمات الجسم المعطرة -->
+        <a href="creams.html" class="lux-cat-card">
+          <img src="assets/images/cream_oud_roses.jpg" alt="كريمات الجسم المعطرة" class="lux-cat-bg" loading="lazy" />
+          <div class="lux-cat-overlay"></div>
+          <div class="lux-cat-content">
+            <span class="lux-cat-pill" style="color: #FFD54F;" data-i18n="lux_cat_creams_pill">✨ مجموعة جديدة وحصرية</span>
+            <h3 class="lux-cat-name" data-i18n="lux_cat_creams_name">كريمات الجسم المعطرة</h3>
+            <p class="lux-cat-desc" data-i18n="lux_cat_creams_desc">ترطيب مخملي عميق يدوم 24 ساعة بعبير دهن الورد والعود والمسك.</p>
+            <span class="lux-cat-cta-link" data-i18n="lux_cat_creams_cta">تسوق الكريمات ←</span>
+          </div>
+        </a>
+
+        <!-- 3. دهن العود والمسك المركز -->
+        <a href="oils.html" class="lux-cat-card">
+          <img src="assets/images/oil_dehn_oud.jpg" alt="دهن العود والمسك" class="lux-cat-bg" loading="lazy" />
+          <div class="lux-cat-overlay"></div>
+          <div class="lux-cat-content">
+            <span class="lux-cat-pill" data-i18n="lux_cat_oils_pill">💎 نقاء التراث 100%</span>
+            <h3 class="lux-cat-name" data-i18n="lux_cat_oils_name">دهن العود والمسك</h3>
+            <p class="lux-cat-desc" data-i18n="lux_cat_oils_desc">تقطير تراثي نقي 100% من أندر أشجار العود المعمرة وتولات المسك الحريري.</p>
+            <span class="lux-cat-cta-link" data-i18n="lux_cat_oils_cta">تسوق الزيوت ←</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- صف ثاني للأقسام بعرض ممتد -->
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 24px;">
+        <!-- 4. بخور ودخون المجالس -->
+        <a href="bakhoor.html" class="lux-cat-card" style="height: 320px;">
+          <img src="assets/images/dakhoon.jpg" alt="بخور ودخون المجالس" class="lux-cat-bg" loading="lazy" />
+          <div class="lux-cat-overlay"></div>
+          <div class="lux-cat-content">
+            <span class="lux-cat-pill" data-i18n="lux_cat_bakhoor_pill">🕌 كرم الضيافة العربية</span>
+            <h3 class="lux-cat-name" data-i18n="lux_cat_bakhoor_name">بخور ودخون المجالس</h3>
+            <p class="lux-cat-desc" data-i18n="lux_cat_bakhoor_desc">رقائق عود مروكي طبيعي وأقراص دخون معجونة بدهن الورد الطائفي.</p>
+            <span class="lux-cat-cta-link" data-i18n="lux_cat_bakhoor_cta">تسوق البخور ←</span>
+          </div>
+        </a>
+
+        <!-- 5. صناديق الهدايا الفاخرة -->
+        <a href="gift-sets.html" class="lux-cat-card" style="height: 320px;">
+          <img src="assets/images/gift_set.jpg" alt="صناديق الهدايا الفاخرة" class="lux-cat-bg" loading="lazy" />
+          <div class="lux-cat-overlay"></div>
+          <div class="lux-cat-content">
+            <span class="lux-cat-pill" data-i18n="lux_cat_gifts_pill">🎁 فن الإهداء الملكي</span>
+            <h3 class="lux-cat-name" data-i18n="lux_cat_gifts_name">صناديق الهدايا الفاخرة</h3>
+            <p class="lux-cat-desc" data-i18n="lux_cat_gifts_desc">صناديق جلدية مخملية جاهزة للإهداء الفوري لأصحاب المقام الرفيع.</p>
+            <span class="lux-cat-cta-link" data-i18n="lux_cat_gifts_cta">استكشف الهدايا ←</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================
+       6. تسليط الضوء على كريمات الجسم المخملية (CREAMS SPOTLIGHT WITH DIRECT ADD TO CART)
+       =================================================================== -->
+  <section class="creams-spotlight-section" style="padding: 80px 0; background: linear-gradient(180deg, #FBF9F6 0%, #FFFFFF 100%); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+    <div class="container">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 40px;">
+        <div>
+          <span style="font-family: var(--font-calligraphy); font-size: 1.15rem; color: var(--gold-deep); display: block; margin-bottom: 6px;" data-i18n="creams_spotlight_badge">جديد وحصري لعام ٢٠٢٦</span>
+          <h2 style="font-family: var(--font-arabic-title); font-size: 2.2rem; font-weight: 900; color: #111;" data-i18n="creams_spotlight_title">كريمات الجسم المعطرة الفاخرة</h2>
+          <p style="font-size: 0.95rem; color: #666; margin-top: 6px;" data-i18n="creams_spotlight_desc">ملمس حريري وترطيب يدوم 24 ساعة؛ أضف عطرك المفضل بصيغة كريم فاخر مباشرة لسلتك.</p>
+        </div>
+        <a href="creams.html" class="btn btn-secondary" style="padding: 10px 22px; font-size: 0.85rem; font-weight: 800; display: inline-flex; align-items: center; gap: 8px;">
+          <span data-i18n="creams_spotlight_cta">عرض صفحة الكريمات المستقلة ←</span>
+        </a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;">
+        <!-- كريم 1: عود وورد -->
+        <div class="cherished-card">
+          <div class="cherished-card-media">
+            <span class="cherished-badge" style="background: rgba(194, 24, 91, 0.9);" data-i18n="cream_card_oud_roses_badge">الأكثر مبيعاً 🌹</span>
+            <img src="assets/images/cream_oud_roses.jpg" alt="كريم عود وورد" loading="lazy" />
+          </div>
+          <div class="cherished-card-content">
+            <h3 class="cherished-item-title" data-i18n="cream_card_oud_roses_title">كريم عود وورد الفاخر</h3>
+            <p class="cherished-item-notes" data-i18n="cream_card_oud_roses_notes">ترطيب مخملي بعبير الورد الطائفي النقي وخشب العود</p>
+            <div class="cherished-item-price-row">
+              <span class="cherished-current-price">35 ر.س</span>
+              <span class="cherished-old-price">50 ر.س</span>
+            </div>
+            <button type="button" class="btn-cherished-cart" onclick="addToCart('atyab-cream-oud-roses', 'مرطبان 150 جم (الحجم الملكي)', 1)" style="width: 100%;">
+              <span data-i18n="cream_add_cart_btn">🛍️ أضف للسلة الآن</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- كريم 2: بن شيخ -->
+        <div class="cherished-card">
+          <div class="cherished-card-media">
+            <span class="cherished-badge" style="background: rgba(26, 26, 26, 0.9);" data-i18n="cream_card_bin_shaikh_badge">هيبة وفخامة ⚜️</span>
+            <img src="assets/images/cream_bin_shaikh.jpg" alt="كريم بن شيخ" loading="lazy" />
+          </div>
+          <div class="cherished-card-content">
+            <h3 class="cherished-item-title" data-i18n="cream_card_bin_shaikh_title">كريم بن شيخ المخملي</h3>
+            <p class="cherished-item-notes" data-i18n="cream_card_bin_shaikh_notes">زبدة غنية بعبير دهن العود المعتق، البخور، والزعفران</p>
+            <div class="cherished-item-price-row">
+              <span class="cherished-current-price">38 ر.س</span>
+              <span class="cherished-old-price">55 ر.س</span>
+            </div>
+            <button type="button" class="btn-cherished-cart" onclick="addToCart('atyab-cream-bin-shaikh', 'مرطبان 150 جم (الحجم الملكي)', 1)" style="width: 100%;">
+              <span data-i18n="cream_add_cart_btn">🛍️ أضف للسلة الآن</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- كريم 3: مسك الحرير -->
+        <div class="cherished-card">
+          <div class="cherished-card-media">
+            <span class="cherished-badge" style="background: rgba(80, 80, 80, 0.85);" data-i18n="cream_card_musk_silk_badge">سوفليه مخفوق ☁️</span>
+            <img src="assets/images/cream_musk_silk.jpg" alt="كريم مسك الحرير" loading="lazy" />
+          </div>
+          <div class="cherished-card-content">
+            <h3 class="cherished-item-title" data-i18n="cream_card_musk_silk_title">كريم مسك الحرير المخفوق</h3>
+            <p class="cherished-item-notes" data-i18n="cream_card_musk_silk_notes">قوام سحابي بعبير المسك الأبيض النقي وزهر القطن</p>
+            <div class="cherished-item-price-row">
+              <span class="cherished-current-price">32 ر.س</span>
+              <span class="cherished-old-price">48 ر.س</span>
+            </div>
+            <button type="button" class="btn-cherished-cart" onclick="addToCart('atyab-cream-musk-silk', 'مرطبان 150 جم (الأكثر طلباً)', 1)" style="width: 100%;">
+              <span data-i18n="cream_add_cart_btn">🛍️ أضف للسلة الآن</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- كريم 4: مرج المرطب -->
+        <div class="cherished-card">
+          <div class="cherished-card-media">
+            <span class="cherished-badge" style="background: rgba(46, 125, 50, 0.9);" data-i18n="cream_card_marj_badge">إشراقة ذهبية ✨</span>
+            <img src="assets/images/cream_marj_gold.jpg" alt="كريم مرج المرطب" loading="lazy" />
+          </div>
+          <div class="cherished-card-content">
+            <h3 class="cherished-item-title" data-i18n="cream_card_marj_title">كريم مرج المرطب للجسم</h3>
+            <p class="cherished-item-notes" data-i18n="cream_card_marj_notes">انتعاش الفواكه الملكية والزهور بلمسة ذهبية مرطبة</p>
+            <div class="cherished-item-price-row">
+              <span class="cherished-current-price">36 ر.س</span>
+              <span class="cherished-old-price">52 ر.س</span>
+            </div>
+            <button type="button" class="btn-cherished-cart" onclick="addToCart('atyab-cream-marj', 'مرطبان 150 جم', 1)" style="width: 100%;">
+              <span data-i18n="cream_add_cart_btn">🛍️ أضف للسلة الآن</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================
+       7. شريط الثقة والضمانات الملكية (TRUST STRIP)
        =================================================================== -->
   <section class="trust-strip">
     <div class="trust-grid container">
@@ -298,14 +662,14 @@
         <div class="trust-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="1" y="3" width="15" height="13"></rect>
-            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 8"></polygon>
             <circle cx="5.5" cy="18.5" r="2.5"></circle>
             <circle cx="18.5" cy="18.5" r="2.5"></circle>
           </svg>
         </div>
         <div class="trust-info">
-          <h4>شحن سريع ومجاني</h4>
-          <p>توصيل لجميع مناطق المملكة مجاناً للطلبات فوق 150 ر.س</p>
+          <h4 data-i18n="trust1_title">شحن سريع ومجاني</h4>
+          <p data-i18n="trust1_desc">توصيل لجميع مناطق المملكة مجاناً للطلبات فوق 150 ر.س</p>
         </div>
       </div>
 
@@ -317,8 +681,8 @@
           </svg>
         </div>
         <div class="trust-info">
-          <h4>أصالة وجودة مضمونة</h4>
-          <p>عطور وزيوت أصلية 100% مطابقة لأعلى المواصفات</p>
+          <h4 data-i18n="trust2_title">أصالة وجودة مضمونة</h4>
+          <p data-i18n="trust2_desc">عطور وزيوت أصلية 100% مطابقة لأعلى المواصفات</p>
         </div>
       </div>
 
@@ -330,8 +694,8 @@
           </svg>
         </div>
         <div class="trust-info">
-          <h4>دفع آمن ومتعدد</h4>
-          <p>مدى، آبل باي، فيزا، والدفع عند الاستلام بالمملكة</p>
+          <h4 data-i18n="trust3_title">دفع آمن ومتعدد</h4>
+          <p data-i18n="trust3_desc">مدى، آبل باي، فيزا، والدفع عند الاستلام بالمملكة</p>
         </div>
       </div>
 
@@ -342,108 +706,42 @@
           </svg>
         </div>
         <div class="trust-info">
-          <h4>خدمة العملاء الملكية</h4>
-          <p>استشارات عطرية ودعم مستمر عبر الواتساب على مدار الساعة</p>
+          <h4 data-i18n="trust4_title">خدمة العملاء الملكية</h4>
+          <p data-i18n="trust4_desc">استشارات عطرية ودعم مستمر عبر الواتساب على مدار الساعة</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ===================================================================
-       5. قسم "مقدَّر من الجميع" (AHMED AL MAGHRIBI SIGNATURE SHOWCASE)
+       8. ربع قرن من الإتقان والعراقة (25+ YEARS OF MASTERY & HERITAGE)
        =================================================================== -->
-  <section class="showcase-section" id="showcase">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-subtitle">المجموعة الملكية المختارة</span>
-        <h2 class="section-title">مقدَّر ومحبوب من الجميع</h2>
-        <div class="gold-line"></div>
-        <p class="section-desc">
-          تشكيلة أطياب الست الفاخرة التي حازت على ثقة وشغف عملائنا في المملكة العربية السعودية، مصممة لأصحاب الذوق الرفيع.
+  <section class="mastery-section" style="padding: 80px 0; background: #161412; color: #FFFFFF; position: relative; overflow: hidden;">
+    <div class="container" style="position: relative; z-index: 2;">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 50px;">
+        <span style="font-family: var(--font-calligraphy); font-size: 1.25rem; color: var(--gold-vibrant); display: block; margin-bottom: 8px;" data-i18n="mastery_subtitle">عراقة متأصلة منذ عام ١٩٨٨</span>
+        <h2 style="font-family: var(--font-arabic-title); font-size: 2.5rem; font-weight: 900; color: #FFF; margin-bottom: 12px;" data-i18n="mastery_title">أكثر من 25 عاماً من الإتقان العطري</h2>
+        <p style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.78); line-height: 1.7;" data-i18n="mastery_desc">
+          مسيرة حافلة بالشغف والابتكار في عالم العطور الخليجية الفاخرة؛ ننتقي أندر أخشاب العود ونقطر أنقى قطرات الورد لنقدم لعملائنا في المملكة تحفاً عطرية تدوم في الذاكرة.
         </p>
       </div>
 
-      <!-- يتم تعبئة الشبكة آلياً من ملف app.js بجميع العطور الستة -->
-      <div class="showcase-grid" id="showcase-grid-items"></div>
-    </div>
-  </section>
-
-  <!-- ===================================================================
-       6. قسم "الأكثر مبيعاً" (BEST SELLERS CHAPTER)
-       =================================================================== -->
-  <section class="best-sellers-section" id="best-sellers">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-subtitle">إصدارات القمة</span>
-        <h2 class="section-title">الأكثر مبيعاً وطلباً بالمملكة</h2>
-        <div class="gold-line"></div>
-        <p class="section-desc">
-          العطور الأكثر تفضيلاً للمناسبات الرسمية والخاصة والتي تمثل بصمة أطياب الفريدة.
-        </p>
-      </div>
-
-      <div class="chapter-cards-grid">
-        <!-- بطاقة 1: تايقر عود -->
-        <div class="chapter-card">
-          <div class="chapter-img">
-            <span class="chapter-badge">الأكثر شهرة 🔥</span>
-            <img src="assets/images/tiger_oud.jpg" alt="تايقر عود" loading="lazy" />
-          </div>
-          <div class="chapter-body">
-            <h3 class="chapter-title">تايقر عود الملكي (Tiger Oud)</h3>
-            <div class="chapter-motto">عود كمبودي حار، زعفران أحمر، وجلد مدبوغ فاخر</div>
-            <p class="chapter-desc">
-              عطر الهيبة والقوة، مصمم بجرأة لمحبي الروائح الشرقية الثقيلة التي تفرض حضورها في المجالس وقاعات الاحتفالات.
-            </p>
-            <div class="chapter-footer">
-              <div class="chapter-price-val">ابتداءً من 40 ر.س</div>
-              <button class="btn-classic" onclick="addToCart('atyab-tiger-oud', '110 مل', 1)">
-                أضف إلى السلة
-              </button>
-            </div>
-          </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center;">
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(197, 155, 39, 0.3); border-radius: 12px; padding: 30px 20px;">
+          <strong style="font-size: 2.8rem; font-weight: 900; color: var(--gold-vibrant); display: block; margin-bottom: 6px;" data-i18n="mastery_stat1_num">+25</strong>
+          <span style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.85); font-weight: 700;" data-i18n="mastery_stat1_text">عاماً من الريادة والعراقة</span>
         </div>
-
-        <!-- بطاقة 2: عطر نادر -->
-        <div class="chapter-card">
-          <div class="chapter-img">
-            <span class="chapter-badge">الأعلى تقييماً ⭐</span>
-            <img src="assets/images/nader.jpg" alt="عطر نادر" loading="lazy" />
-          </div>
-          <div class="chapter-body">
-            <h3 class="chapter-title">أطياب نادر (Nader)</h3>
-            <div class="chapter-motto">هيل أخضر فاخر، خشب الأرز، وجوزة الطيب المدخنة</div>
-            <p class="chapter-desc">
-              تجسيد حقيقي للشخصية القيادية الرصينة، مزيج فريد بين الأخشاب العطرية والتوابل الشرقية الدافئة لأناقة يومية ورسمية.
-            </p>
-            <div class="chapter-footer">
-              <div class="chapter-price-val">ابتداءً من 50 ر.س</div>
-              <button class="btn-classic" onclick="addToCart('atyab-nader', '100 مل', 1)">
-                أضف إلى السلة
-              </button>
-            </div>
-          </div>
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(197, 155, 39, 0.3); border-radius: 12px; padding: 30px 20px;">
+          <strong style="font-size: 2.8rem; font-weight: 900; color: var(--gold-vibrant); display: block; margin-bottom: 6px;" data-i18n="mastery_stat2_num">+150</strong>
+          <span style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.85); font-weight: 700;" data-i18n="mastery_stat2_text">توليفة عطرية ملكية حصرية</span>
         </div>
-
-        <!-- بطاقة 3: مون فلاور -->
-        <div class="chapter-card">
-          <div class="chapter-img">
-            <span class="chapter-badge">سحر الأنوثة 🌙</span>
-            <img src="assets/images/moon_flower.jpg" alt="مون فلاور" loading="lazy" />
-          </div>
-          <div class="chapter-body">
-            <h3 class="chapter-title">مون فلاور (Moon Flower)</h3>
-            <div class="chapter-motto">زهر القمر الليلي، نيرولي مضيء، وعنبر أبيض كريستالي</div>
-            <p class="chapter-desc">
-              عطر راقٍ يتفتح كزهرة نادرة تحت ضوء القمر، يجمع بين النعومة الفائقة والفخامة الخالدة بتركيز أو دو بارفان يدوم طويلاً.
-            </p>
-            <div class="chapter-footer">
-              <div class="chapter-price-val">ابتداءً من 80 ر.س</div>
-              <button class="btn-classic" onclick="addToCart('atyab-moon-flower', '100 مل', 1)">
-                أضف إلى السلة
-              </button>
-            </div>
-          </div>
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(197, 155, 39, 0.3); border-radius: 12px; padding: 30px 20px;">
+          <strong style="font-size: 2.8rem; font-weight: 900; color: var(--gold-vibrant); display: block; margin-bottom: 6px;" data-i18n="mastery_stat3_num">100%</strong>
+          <span style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.85); font-weight: 700;" data-i18n="mastery_stat3_text">زيوت وخلاصات طبيعية نقية</span>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(197, 155, 39, 0.3); border-radius: 12px; padding: 30px 20px;">
+          <strong style="font-size: 2.8rem; font-weight: 900; color: var(--gold-vibrant); display: block; margin-bottom: 6px;" data-i18n="mastery_stat4_num">+500K</strong>
+          <span style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.85); font-weight: 700;" data-i18n="mastery_stat4_text">عميل يثقون بأطياب في الخليج</span>
         </div>
       </div>
     </div>
@@ -455,10 +753,10 @@
   <section class="catalog-section" id="catalog">
     <div class="container">
       <div class="section-header">
-        <span class="section-subtitle">المجموعة الكاملة</span>
-        <h2 class="section-title">كتالوج العطور والنفائس الملكية</h2>
+        <span class="section-subtitle" data-i18n="catalog_subtitle">المجموعة الكاملة</span>
+        <h2 class="section-title" data-i18n="catalog_title">كتالوج العطور والنفائس الملكية</h2>
         <div class="gold-line"></div>
-        <p class="section-desc">
+        <p class="section-desc" data-i18n="catalog_desc">
           استكشف قواريرنا الست الحصرية المختارة بعناية، متوفرة بأحجام مختلفة وبأفضل الأسعار بالمملكة.
         </p>
       </div>
@@ -466,19 +764,19 @@
       <!-- عناصر التحكم بالفلترة والترتيب -->
       <div class="catalog-controls">
         <div class="filter-tabs">
-          <button class="filter-tab active" data-filter="all">جميع المنتجات (٦)</button>
-          <button class="filter-tab" data-filter="oud">العود والبخور (٢)</button>
-          <button class="filter-tab" data-filter="oriental">العطور الشرقية (٢)</button>
-          <button class="filter-tab" data-filter="fresh">المنعشة والزهرية (٢)</button>
+          <button class="filter-tab active" data-filter="all" data-i18n="filter_all">جميع المنتجات (٦)</button>
+          <button class="filter-tab" data-filter="oud" data-i18n="filter_oud">العود والبخور (٢)</button>
+          <button class="filter-tab" data-filter="oriental" data-i18n="filter_oriental">العطور الشرقية (٢)</button>
+          <button class="filter-tab" data-filter="fresh" data-i18n="filter_fresh">المنعشة والزهرية (٢)</button>
         </div>
 
         <div class="catalog-sort">
-          <label for="catalog-sort-select">ترتيب حسب:</label>
+          <label for="catalog-sort-select" data-i18n="sort_label">ترتيب حسب:</label>
           <select id="catalog-sort-select">
-            <option value="featured">المميز والموصى به</option>
-            <option value="price-low">السعر: من الأقل إلى الأعلى</option>
-            <option value="price-high">السعر: من الأعلى إلى الأقل</option>
-            <option value="rating">الأعلى تقييماً</option>
+            <option value="featured" data-i18n="sort_featured">المميز والموصى به</option>
+            <option value="price-low" data-i18n="sort_price_low">السعر: من الأقل إلى الأعلى</option>
+            <option value="price-high" data-i18n="sort_price_high">السعر: من الأعلى إلى الأقل</option>
+            <option value="rating" data-i18n="sort_rating">الأعلى تقييماً</option>
           </select>
         </div>
       </div>
@@ -496,24 +794,24 @@
     <div class="spotlight-banner-overlay"></div>
     <div class="container" style="position: relative; z-index: 3;">
       <div class="spotlight-banner-content">
-        <span class="section-subtitle" style="color: #F8E2A7;">تألق لا يخبو</span>
+        <span class="section-subtitle" style="color: #F8E2A7;" data-i18n="spotlight_subtitle">تألق لا يخبو</span>
         <h2 style="font-family: var(--font-arabic-title); font-size: 2.8rem; font-weight: 900; color: #FFFFFF; line-height: 1.25; margin-bottom: 16px;">
-          سحر الليالي العربية الفاتنة
-          <span style="display: block; color: var(--gold-light);">مون فلاور ومشـاعر</span>
+          <span data-i18n="spotlight_title_1">سحر الليالي العربية الفاتنة</span>
+          <span style="display: block; color: var(--gold-light);" data-i18n="spotlight_title_2">مون فلاور ومشـاعر</span>
         </h2>
-        <p style="font-size: 1.05rem; color: #E8E5DF; line-height: 1.8; margin-bottom: 28px;">
+        <p style="font-size: 1.05rem; color: #E8E5DF; line-height: 1.8; margin-bottom: 28px;" data-i18n="spotlight_desc">
           توليفة حسية نادرة تجمع بين نفحات زهر القمر الليلي المضيء ودفء الورد الدمشقي المخملي مع لمسات الفانيليا والعنبر الأبيض الكريستالي لجاذبية راقية في كل مناسبة.
         </p>
         <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
           <button class="btn-hero-primary" onclick="filterByCategory('fresh')">
-            <span>تسوق العطور الزهرية</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <span data-i18n="spotlight_cta1">تسوق العطور الزهرية</span>
+            <svg class="cta-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
           </button>
           <button class="btn-hero-outline" onclick="openQuickView('atyab-moon-flower')">
-            <span>نظرة سريعة على مون فلاور (80 ر.س)</span>
+            <span data-i18n="spotlight_cta2">نظرة سريعة على مون فلاور (80 ر.س)</span>
             <span>🌸</span>
           </button>
         </div>
@@ -526,35 +824,35 @@
        =================================================================== -->
   <section class="showcase-section" id="bakhoor" style="background: var(--bg-ivory); border-top: 1px solid var(--border-light);">
     <div class="container">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;" class="bakhoor-grid">
         <div style="border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-gold); box-shadow: var(--shadow-card);">
           <img src="assets/images/backhoor.jpg" alt="بخور أطياب الملكي" style="width: 100%; height: 100%; object-fit: cover;" />
         </div>
 
         <div>
-          <span class="section-subtitle">تراث الضيافة العربية</span>
-          <h2 style="font-family: var(--font-arabic-title); font-size: 2.2rem; font-weight: 800; color: #000; margin-bottom: 14px;">
+          <span class="section-subtitle" data-i18n="bakhoor_subtitle">تراث الضيافة العربية</span>
+          <h2 style="font-family: var(--font-arabic-title); font-size: 2.2rem; font-weight: 800; color: #000; margin-bottom: 14px;" data-i18n="bakhoor_title">
             بخور أطياب الملكي الفاخر
           </h2>
           <div style="width: 60px; height: 2px; background: var(--gold-primary); margin-bottom: 20px;"></div>
-          <p style="font-size: 1rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
+          <p style="font-size: 1rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;" data-i18n="bakhoor_desc">
             رقائق عود مروكي طبيعي معتقة لسنوات في مزيج ملكي من دهن العود الصافي، المسك الأسود، وعنبر الشيوخ، مع قطرات من ماء الورد الجبلي. صُمم خصيصاً لتعطير المجالس، قصور الضيافة، والمناسبات الكبرى بنفحات بخورية تدوم لساعات طويلة في الأرجاء.
           </p>
-          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: 8px; padding: 16px; margin-bottom: 24px; display: flex; gap: 20px;">
-            <div>⏱️ <strong>ثبات الدخون:</strong> أكثر من 48 ساعة بالمكان</div>
-            <div>📦 <strong>الوزن الصافي:</strong> 100 جرام ملكي</div>
+          <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: 8px; padding: 16px; margin-bottom: 24px; display: flex; gap: 20px;" class="bakhoor-stats-box">
+            <div data-i18n="bakhoor_stat1">⏱️ <strong>ثبات الدخون:</strong> أكثر من 48 ساعة بالمكان</div>
+            <div data-i18n="bakhoor_stat2">📦 <strong>الوزن الصافي:</strong> 100 جرام ملكي</div>
           </div>
           <div style="display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px;">
-            <span style="font-size: 0.9rem; color: var(--text-muted);">السعر الرسمي:</span>
-            <span style="font-family: var(--font-arabic-title); font-size: 1.8rem; font-weight: 900; color: var(--gold-primary);">30 ر.س</span>
-            <span style="font-size: 1rem; color: var(--text-muted); text-decoration: line-through;">50 ر.س</span>
+            <span style="font-size: 0.9rem; color: var(--text-muted);" data-i18n="bakhoor_price_label">السعر الرسمي:</span>
+            <span style="font-family: var(--font-arabic-title); font-size: 1.8rem; font-weight: 900; color: var(--gold-primary);" id="bakhoor-official-price">30 ر.س</span>
+            <span style="font-size: 1rem; color: var(--text-muted); text-decoration: line-through;" id="bakhoor-old-price">50 ر.س</span>
           </div>
           <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-            <button class="btn btn-primary" onclick="addToCart('atyab-backhoor', '100 جرام', 1)">
-              أضف البخور إلى السلة الملكية
-            </button>
-            <button class="btn btn-secondary" onclick="openQuickView('atyab-backhoor')">
-              المكونات ونظرة سريعة
+            <a href="product.html?id=atyab-backhoor" class="btn btn-primary" data-i18n="bakhoor_page_btn">
+              صفحة بخور أطياب الملكي
+            </a>
+            <button class="btn btn-secondary" onclick="addToCart('atyab-backhoor', '100 جرام', 1)" data-i18n="bakhoor_btn_cart">
+              أضف البخور إلى السلة
             </button>
           </div>
         </div>
@@ -568,34 +866,34 @@
   <section class="scent-finder-banner" id="scent-quiz">
     <div class="scent-finder-inner container">
       <div>
-        <span style="color: var(--gold-light); font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 8px;">
+        <span style="color: var(--gold-light); font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 8px;" data-i18n="quiz_badge">
           خدمة مجانية وحصرية لعملائنا
         </span>
-        <h2 style="font-family: var(--font-arabic-title); font-size: 2.3rem; font-weight: 900; color: #FFFFFF; line-height: 1.3; margin-bottom: 16px;">
+        <h2 style="font-family: var(--font-arabic-title); font-size: 2.3rem; font-weight: 900; color: #FFFFFF; line-height: 1.3; margin-bottom: 16px;" data-i18n="quiz_title">
           محتار في اختيار العطر المناسب لك أو كهدية؟
         </h2>
-        <p style="font-size: 1rem; color: #DDD; line-height: 1.8; max-width: 600px;">
+        <p style="font-size: 1rem; color: #DDD; line-height: 1.8; max-width: 600px;" data-i18n="quiz_desc">
           خلال أقل من دقيقة، يجيب مستشار أطياب الذكي عن 3 أسئلة بسيطة حول شخصيتك والمناسبة التي تبحث عنها، ليوصلك فوراً إلى عطرك المثالي المطابق تماماً لذوقك.
         </p>
 
         <div class="quiz-perks">
           <div class="quiz-perk-card">
             <span>⚜️</span>
-            <h5>تحليل الذوق الشخصي</h5>
+            <h5 data-i18n="quiz_perk1">تحليل الذوق الشخصي</h5>
           </div>
           <div class="quiz-perk-card">
             <span>⏱️</span>
-            <h5>أقل من دقيقة واحدة</h5>
+            <h5 data-i18n="quiz_perk2">أقل من دقيقة واحدة</h5>
           </div>
           <div class="quiz-perk-card">
             <span>🎁</span>
-            <h5>مطابقة عطرية 100%</h5>
+            <h5 data-i18n="quiz_perk3">مطابقة عطرية 100%</h5>
           </div>
         </div>
 
         <button class="btn btn-primary" style="background: var(--gold-primary); border-color: var(--gold-primary); color: #000; font-weight: 800;" onclick="openScentQuiz()">
-          <span>ابدأ اختبار مستشار العطور الآن</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <span data-i18n="quiz_start_btn">ابدأ اختبار مستشار العطور الآن</span>
+          <svg class="cta-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
@@ -605,8 +903,8 @@
       <div style="text-align: center;">
         <div style="display: inline-block; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(166, 123, 48, 0.4); border-radius: var(--radius-lg); padding: 34px 28px; backdrop-filter: blur(10px);">
           <span style="font-size: 3.5rem; display: block; margin-bottom: 12px;">👑</span>
-          <h3 style="font-family: var(--font-arabic-title); font-size: 1.3rem; color: #FFF; margin-bottom: 8px;">مستشار الذوق الرفيع</h3>
-          <p style="font-size: 0.85rem; color: #BBB; line-height: 1.6;">
+          <h3 style="font-family: var(--font-arabic-title); font-size: 1.3rem; color: #FFF; margin-bottom: 8px;" data-i18n="quiz_box_title">مستشار الذوق الرفيع</h3>
+          <p style="font-size: 0.85rem; color: #BBB; line-height: 1.6;" data-i18n="quiz_box_desc">
             صُمم الاختبار بواسطة خبراء العطور في المملكة لمساعدتك على انتقاء الرائحة التي تمنحك الثقة والتميز.
           </p>
         </div>
@@ -620,10 +918,10 @@
   <section class="reviews-section" id="reviews">
     <div class="container">
       <div class="section-header">
-        <span class="section-subtitle">ثقة نعتز بها</span>
-        <h2 class="section-title">آراء عملائنا الكرام في المملكة</h2>
+        <span class="section-subtitle" data-i18n="reviews_subtitle">ثقة نعتز بها</span>
+        <h2 class="section-title" data-i18n="reviews_title">آراء عملائنا الكرام في المملكة</h2>
         <div class="gold-line"></div>
-        <p class="section-desc">
+        <p class="section-desc" data-i18n="reviews_desc">
           تجارب حقيقية لعملاء أطياب في الرياض، جدة، الشرقية ومختلف مدن المملكة العربية السعودية.
         </p>
       </div>
@@ -631,46 +929,46 @@
       <div class="reviews-grid">
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
-          <h4 class="review-title">«ثبات أسطوري وفخامة تليق بالمناسبات»</h4>
-          <p class="review-text">
+          <h4 class="review-title" data-i18n="review1_title">«ثبات أسطوري وفخامة تليق بالمناسبات»</h4>
+          <p class="review-text" data-i18n="review1_text">
             طلبت عطر تايقر عود وبخور أطياب، ما شاء الله ثبات العطر في الثوب جلس يومين كاملين، وكل من مر بجانبي يسألني عن الرائحة. التوصيل للرياض كان سريع جداً ومغلف بعناية فائقة.
           </p>
           <div class="review-author-box">
             <div>
-              <div class="author-name">سلطان القحطاني</div>
-              <div class="author-product">عميل اشترى: تايقر عود 110 مل</div>
+              <div class="author-name" data-i18n="review1_author">سلطان القحطاني</div>
+              <div class="author-product" data-i18n="review1_product">عميل اشترى: تايقر عود 110 مل</div>
             </div>
-            <span class="verified-badge">✓ مشتري موثق</span>
+            <span class="verified-badge" data-i18n="verified_buyer">✓ مشتري موثق</span>
           </div>
         </div>
 
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
-          <h4 class="review-title">«مون فلاور سحر أنثوي هادئ لا يقاوم»</h4>
-          <p class="review-text">
+          <h4 class="review-title" data-i18n="review2_title">«مون فلاور سحر أنثوي هادئ لا يقاوم»</h4>
+          <p class="review-text" data-i18n="review2_text">
             عطر مون فلاور أخذ قلبي من أول رشة! ناعم جداً وفيه دفء زهر القمر مع العنبر الأبيض، استخدمته لزواج أختي والكل سألني عنه. يستحق كل ريال وخدمتكم بالواتساب راقية جداً.
           </p>
           <div class="review-author-box">
             <div>
-              <div class="author-name">نورة الشمري - جدة</div>
-              <div class="author-product">عميلة اشترت: مون فلاور 100 مل</div>
+              <div class="author-name" data-i18n="review2_author">نورة الشمري - جدة</div>
+              <div class="author-product" data-i18n="review2_product">عميلة اشترت: مون فلاور 100 مل</div>
             </div>
-            <span class="verified-badge">✓ مشتري موثق</span>
+            <span class="verified-badge" data-i18n="verified_buyer">✓ مشتري موثق</span>
           </div>
         </div>
 
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
-          <h4 class="review-title">«عطر نادر اسم على مسمى للشتاء والمجلس»</h4>
-          <p class="review-text">
+          <h4 class="review-title" data-i18n="review3_title">«عطر نادر اسم على مسمى للشتاء والمجلس»</h4>
+          <p class="review-text" data-i18n="review3_text">
             عطر نادر جمع بين الهيل والأخشاب الملكية بدون أي إزعاج، فوحانه هادئ وفخم جداً للدوام والاجتماعات المهمة. صراحة سعر 50 ريال عليه فرصة ذهبية مقارنة بجودته العالية.
           </p>
           <div class="review-author-box">
             <div>
-              <div class="author-name">عبدالعزيز الدوسري - الخبر</div>
-              <div class="author-product">عميل اشترى: أطياب نادر 100 مل</div>
+              <div class="author-name" data-i18n="review3_author">عبدالعزيز الدوسري - الخبر</div>
+              <div class="author-product" data-i18n="review3_product">عميل اشترى: أطياب نادر 100 مل</div>
             </div>
-            <span class="verified-badge">✓ مشتري موثق</span>
+            <span class="verified-badge" data-i18n="verified_buyer">✓ مشتري موثق</span>
           </div>
         </div>
       </div>
@@ -678,58 +976,58 @@
   </section>
 
   <!-- ===================================================================
-       11. التذييل الرسمي (OFFICIAL FOOTER - AHMED AL MAGHRIBI STYLE)
+       11. التذييل الرسمي (OFFICIAL FOOTER)
        =================================================================== -->
   <footer class="main-footer">
     <div class="footer-grid container">
       <!-- هوية المتجر -->
       <div class="footer-brand">
-        <h3>أطياب للعطور الفاخرة</h3>
-        <div class="sub">AYTYAB ROYAL PERFUMES • KSA</div>
-        <p style="font-size: 0.88rem; color: #AAA; line-height: 1.7; margin-bottom: 20px;">
+        <h3 data-i18n="footer_brand_title">أطياب للعطور الفاخرة</h3>
+        <div class="sub" data-i18n="footer_brand_sub">ATYAB ROYAL PERFUMES • KSA</div>
+        <p style="font-size: 0.88rem; color: #AAA; line-height: 1.7; margin-bottom: 20px;" data-i18n="footer_brand_desc">
           دار عطور عربية تأسست عام 1988، تكرس خبرتها في استخلاص أندر أنواع العود والزيوت العطرية النقية لتقديم تجارب حسية ملكية تدوم طويلاً وتليق بأصحاب الفخامة في المملكة.
         </p>
-        <div style="font-size: 0.8rem; color: #888;">
+        <div style="font-size: 0.8rem; color: #888;" data-i18n="footer_cr">
           السجل التجاري بالمملكة: 1010894210 | الرقم الضريبي: 30098471200003
         </div>
       </div>
 
       <!-- روابط سريعة -->
       <div class="footer-col">
-        <h4>أقسام المتجر</h4>
+        <h4 data-i18n="footer_col_sections">أقسام المتجر</h4>
         <ul class="footer-links">
-          <li><a href="#hero">الرئيسية</a></li>
-          <li><a href="#showcase">مقدَّر من الجميع</a></li>
-          <li><a href="#best-sellers">الأكثر مبيعاً بالمملكة</a></li>
-          <li><a href="#catalog">كتالوج العطور الستة</a></li>
-          <li><a href="#bakhoor">بخور ودخون المجالس</a></li>
-          <li><a href="#scent-quiz" onclick="openScentQuiz(); return false;">مستشار العطور التفاعلي</a></li>
+          <li><a href="#hero" data-i18n="nav_home">الرئيسية</a></li>
+          <li><a href="#showcase" data-i18n="nav_showcase">مقدَّر من الجميع</a></li>
+          <li><a href="#best-sellers" data-i18n="nav_bestsellers">الأكثر مبيعاً بالمملكة</a></li>
+          <li><a href="#catalog" data-i18n="nav_catalog">كتالوج العطور الستة</a></li>
+          <li><a href="#bakhoor" data-i18n="footer_bakhoor">بخور ودخون المجالس</a></li>
+          <li><a href="#scent-quiz" onclick="openScentQuiz(); return false;" data-i18n="nav_quiz">مستشار العطور التفاعلي</a></li>
         </ul>
       </div>
 
       <!-- خدمة العملاء والسياسات -->
       <div class="footer-col">
-        <h4>خدمة العملاء</h4>
+        <h4 data-i18n="footer_col_services">خدمة العملاء</h4>
         <ul class="footer-links">
-          <li><a href="#" onclick="alert('الشحن مجاني لجميع مناطق المملكة للطلبات فوق 150 ر.س'); return false;">سياسة الشحن والتوصيل</a></li>
-          <li><a href="#" onclick="alert('نوفر ضمان ذهبي للاستبدال والاسترجاع خلال ٧ أيام من الاستلام'); return false;">الضمان الذهبي والاسترجاع</a></li>
-          <li><a href="#" onclick="openCartDrawer(); return false;">متابعة حالة سلة المشتريات</a></li>
-          <li><a href="#" onclick="openSearchModal(); return false;">البحث في الكتالوج</a></li>
-          <li><a href="https://wa.me/966500000000" target="_blank">التواصل عبر الواتساب</a></li>
+          <li><a href="#" onclick="alert('الشحن مجاني لجميع مناطق المملكة للطلبات فوق 150 ر.س'); return false;" data-i18n="footer_link_ship">سياسة الشحن والتوصيل</a></li>
+          <li><a href="#" onclick="alert('نوفر ضمان ذهبي للاستبدال والاسترجاع خلال ٧ أيام من الاستلام'); return false;" data-i18n="footer_link_warranty">الضمان الذهبي والاسترجاع</a></li>
+          <li><a href="#" onclick="openCartDrawer(); return false;" data-i18n="footer_link_cart">متابعة حالة سلة المشتريات</a></li>
+          <li><a href="#" onclick="openSearchModal(); return false;" data-i18n="footer_link_search">البحث في الكتالوج</a></li>
+          <li><a href="https://wa.me/966500000000" target="_blank" data-i18n="footer_link_whatsapp">التواصل عبر الواتساب</a></li>
         </ul>
       </div>
 
       <!-- الفروع والتواصل بالمملكة -->
       <div class="footer-col">
-        <h4>بوتيكاتنا بالمملكة</h4>
+        <h4 data-i18n="footer_col_boutiques">بوتيكاتنا بالمملكة</h4>
         <div class="contact-info">
           <div class="contact-item">
             <span>📍</span>
-            <span><strong>الرياض:</strong> أبراج العليا، طريق الملك فهد، الطابق الأرضي</span>
+            <span data-i18n="boutique_riyadh"><strong>الرياض:</strong> أبراج العليا، طريق الملك فهد، الطابق الأرضي</span>
           </div>
           <div class="contact-item">
             <span>📍</span>
-            <span><strong>جدة:</strong> رد سي مول، بوابة 4، طريق الملك عبدالعزيز</span>
+            <span data-i18n="boutique_jeddah"><strong>جدة:</strong> رد سي مول، بوابة 4، طريق الملك عبدالعزيز</span>
           </div>
           <div class="contact-item">
             <span>📞</span>
@@ -737,11 +1035,11 @@
           </div>
           <div class="contact-item">
             <span>✉️</span>
-            <span>concierge@aytyab.com.sa</span>
+            <span>concierge@atyab.com.sa</span>
           </div>
           <div class="contact-item">
             <span>⏱️</span>
-            <span>السبت - الخميس: 9:00 ص - 11:00 م</span>
+            <span data-i18n="boutique_hours">السبت - الخميس: 9:00 ص - 11:00 م</span>
           </div>
         </div>
       </div>
@@ -750,31 +1048,100 @@
     <!-- أسفل الفوتر وبطاقات الدفع -->
     <div class="container">
       <div class="footer-bottom">
-        <div>
-          جميع الحقوق محفوظة © 2026 <strong>أطياب للعطور الفاخرة | AYTYAB PERFUMES KSA</strong>
+        <div data-i18n="footer_rights">
+          جميع الحقوق محفوظة © 2026 <strong>أطياب للعطور الفاخرة | ATYAB PERFUME KSA</strong>
         </div>
 
         <div class="payment-badges">
-          <span>طرق الدفع المعتمدة بالمملكة:</span>
+          <span data-i18n="payment_methods_title">طرق الدفع المعتمدة بالمملكة:</span>
           <span style="background: #222; padding: 4px 10px; border-radius: 4px; color: #FFF; font-size: 0.78rem; border: 1px solid #444;">مدى Mada</span>
           <span style="background: #222; padding: 4px 10px; border-radius: 4px; color: #FFF; font-size: 0.78rem; border: 1px solid #444;">Apple Pay</span>
           <span style="background: #222; padding: 4px 10px; border-radius: 4px; color: #FFF; font-size: 0.78rem; border: 1px solid #444;">Visa</span>
-          <span style="background: #222; padding: 4px 10px; border-radius: 4px; color: #FFF; font-size: 0.78rem; border: 1px solid #444;">الدفع عند الاستلام</span>
+          <span style="background: #222; padding: 4px 10px; border-radius: 4px; color: #FFF; font-size: 0.78rem; border: 1px solid #444;" data-i18n="payment_cod">الدفع عند الاستلام</span>
         </div>
       </div>
     </div>
   </footer>
 
   <!-- ===================================================================
-       12. سلة التسوق الجانبية (SLIDE-OUT CART DRAWER - RTL)
+       11.5 قائمة الجوال الجانبية الملكية (SLIDE-OUT LUXURY MOBILE NAV DRAWER)
        =================================================================== -->
-  <div class="drawer-backdrop" id="drawer-backdrop"></div>
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" onclick="closeMobileNav()" style="visibility: hidden;"></div>
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer" style="visibility: hidden;">
+    <div class="mobile-nav-header">
+      <div class="mobile-nav-brand">
+        <img src="assets/images/atyab_logo.svg" alt="أطياب للعطور | ATYAB PERFUME" style="height: 52px; width: auto;" />
+      </div>
+      <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="إغلاق">&times;</button>
+    </div>
 
-  <div class="cart-drawer" id="cart-drawer">
+    <div class="mobile-nav-body">
+      <!-- مربع بحث الجوال -->
+      <div style="padding: 10px 14px; margin-bottom: 10px;">
+        <div class="hdr-search-box" style="display: flex; width: 100%;">
+          <input type="text" class="hdr-search-input" id="mobile-search-input" placeholder="SEARCH" onkeydown="if(event.key==='Enter'){ openSearchModal(); const mi=document.getElementById('search-input-box'); if(mi){ mi.value=this.value; handleLiveSearch(this.value); } closeMobileNav(); }" />
+          <button class="hdr-search-btn" onclick="openSearchModal(); closeMobileNav();">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <ul class="mobile-nav-list">
+        <li><a href="perfumes.html" onclick="closeMobileNav();"><span class="nav-icon">&#128142;</span><span data-i18n="nav_perfume">Ø¹Ø·ÙˆØ±</span></a></li>
+        <li><a href="oils.html" onclick="closeMobileNav();"><span class="nav-icon">&#129514;</span><span data-i18n="nav_oil_perfume">Ø¹Ø·ÙˆØ± Ø²ÙŠØªÙŠØ©</span></a></li>
+        <li><a href="bakhoor.html" onclick="closeMobileNav();"><span class="nav-icon">&#129717;</span><span data-i18n="nav_bakhoor">Ø¨Ø®ÙˆØ±</span></a></li>
+        <li><a href="creams.html" onclick="closeMobileNav();"><span class="nav-icon">&#129524;</span><span data-i18n="nav_cream">ÙƒØ±ÙŠÙ…</span> <span class="nav-badge-new" style="font-size:0.7rem; padding: 2px 6px; background: #C59B27; color:#fff; border-radius:4px; margin-right:4px;" data-i18n="nav_badge_new">Ø¬Ø¯ÙŠØ¯</span></a></li>
+        <li><a href="gift-sets.html" onclick="closeMobileNav();"><span class="nav-icon">&#127873;</span><span data-i18n="nav_gift_sets">Ø£Ø·Ù‚Ù… Ù‡Ø¯Ø§ÙŠØ§</span></a></li>
+        <li><a href="#scent-quiz" onclick="openScentQuiz(); closeMobileNav(); return false;"><span class="nav-icon">&#128302;</span><span data-i18n="nav_quiz">Ù…Ø³ØªØ´Ø§Ø± Ø§Ù„Ø¹Ø·ÙˆØ± (Ø§Ø®ØªØ¨Ø§Ø±)</span></a></li>
+        <li><a href="#track-order" onclick="openTrackOrderModal(); closeMobileNav(); return false;"><span class="nav-icon">&#128230;</span><span data-i18n="track_order_btn">ØªØªØ¨Ø¹ Ø·Ù„Ø¨Ùƒ</span></a></li>
+        <li><a href="#store-locator" onclick="openStoreLocatorModal(); closeMobileNav(); return false;"><span class="nav-icon">&#128205;</span><span data-i18n="store_locator_btn">ÙØ±ÙˆØ¹Ù†Ø§ Ø¨Ø§Ù„Ù…Ù…Ù„ÙƒØ©</span></a></li>
+      </ul>
+
+      <div class="mobile-nav-divider"></div>
+
+      <!-- تبديل العملة واللغة داخل القائمة -->
+      <div class="mobile-nav-settings">
+        <div class="mobile-setting-item">
+          <span class="setting-label" data-i18n="mobile_lang_label">🌐 اللغة / Language</span>
+          <div class="mobile-lang-switch-btns">
+            <button class="mobile-lang-btn" onclick="switchLanguage('ar'); closeMobileNav();">🇸🇦 العربية</button>
+            <button class="mobile-lang-btn" onclick="switchLanguage('en'); closeMobileNav();">🇬🇧 English</button>
+          </div>
+        </div>
+
+        <div class="mobile-setting-item">
+          <span class="setting-label" data-i18n="mobile_curr_label">💵 العملة / Currency</span>
+          <div class="mobile-currency-btns">
+            <button class="mobile-curr-btn" onclick="setCurrency('SAR'); closeMobileNav();">ر.س (SAR)</button>
+            <button class="mobile-curr-btn" onclick="setCurrency('AED'); closeMobileNav();">د.إ (AED)</button>
+            <button class="mobile-curr-btn" onclick="setCurrency('USD'); closeMobileNav();">$ (USD)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- زر التواصل المباشر عبر واتساب -->
+      <div class="mobile-nav-whatsapp">
+        <a href="https://wa.me/966500000000?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%D8%8C%20%D8%A3%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%B9%D8%B7%D9%88%D8%B1%20%D8%A3%D8%B7%D9%8A%D8%A7%D8%A8%20%D8%A7%D9%84%D9%85%D9%84%D9%83%D9%8A%D8%A9" target="_blank" rel="noopener noreferrer" class="mobile-wa-btn">
+          <span>💬</span>
+          <span data-i18n="mobile_wa_btn">خدمة العملاء الملكية (واتساب)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       12. سلة التسوق الجانبية (SLIDE-OUT CART DRAWER)
+       =================================================================== -->
+  <div class="drawer-backdrop" id="drawer-backdrop" style="visibility: hidden;"></div>
+
+  <div class="cart-drawer" id="cart-drawer" style="visibility: hidden;">
     <div class="drawer-header">
       <div style="display: flex; align-items: center; gap: 8px;">
         <span>⚜️</span>
-        <h3>سلة المشتريات الملكية</h3>
+        <h3 data-i18n="cart_drawer_title">سلة المشتريات الملكية</h3>
       </div>
       <button class="drawer-close" onclick="closeCartDrawer()" aria-label="إغلاق">&times;</button>
     </div>
@@ -795,26 +1162,26 @@
     <!-- أسفل السلة والكوبون والحساب الإجمالي -->
     <div class="drawer-footer">
       <div class="coupon-box">
-        <input type="text" id="coupon-input" class="coupon-input" placeholder="كود الخصم (جرب AYTYAB10)" />
-        <button class="btn-coupon" onclick="applyCoupon()">تطبيق</button>
+        <input type="text" id="coupon-input" class="coupon-input" placeholder="كود الخصم (جرب ATYAB10)" data-i18n-placeholder="coupon_placeholder" />
+        <button class="btn-coupon" onclick="applyCoupon()" data-i18n="coupon_btn">تطبيق</button>
       </div>
 
       <div class="cart-summary-line">
-        <span>المجموع الفرعي:</span>
+        <span data-i18n="subtotal_label">المجموع الفرعي:</span>
         <strong id="cart-subtotal">0 ر.س</strong>
       </div>
       <div class="cart-summary-line">
-        <span>الخصم الترويجي:</span>
+        <span data-i18n="discount_label">الخصم الترويجي:</span>
         <span id="cart-discount" style="color: #27AE60; font-weight: 700;">0 ر.س</span>
       </div>
       <div class="cart-summary-line total">
-        <span>المجموع الإجمالي:</span>
+        <span data-i18n="total_label">المجموع الإجمالي:</span>
         <strong class="gold" id="cart-total">0 ر.س</strong>
       </div>
 
       <button class="btn btn-primary btn-checkout-drawer" onclick="openCheckoutModal()">
-        <span>المتابعة لإتمام الطلب الملكي</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <span data-i18n="checkout_drawer_btn">المتابعة لإتمام الطلب الملكي</span>
+        <svg class="cta-arrow-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
@@ -825,6 +1192,88 @@
   <!-- ===================================================================
        13. النوافذ المنبثقة (MODALS)
        =================================================================== -->
+
+  <!-- نافذة تتبع الطلب (TRACK YOUR ORDER MODAL) -->
+  <div class="modal-overlay" id="track-order-modal">
+    <div class="modal-card track-modal-card">
+      <button class="modal-close-btn" onclick="closeTrackOrderModal()" aria-label="إغلاق">&times;</button>
+      <div id="track-modal-card-body">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+          <span style="font-size: 1.5rem;">📦</span>
+          <h3 style="font-family: var(--font-arabic-title); font-size: 1.35rem; font-weight: 800;" data-i18n="track_order_title">تتبع حالة طلبك</h3>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;" data-i18n="track_order_desc">
+          أدخل رقم طلبك أو رقم جوالك لمتابعة حالة الشحن والتوصيل الفوري داخل المملكة 🇸🇦
+        </p>
+        <div class="track-input-group">
+          <input type="text" id="track-order-input" class="track-input-field" placeholder="رقم الطلب (مثال: ATY-8849) أو رقم الجوال" data-i18n-placeholder="track_order_input_placeholder" />
+          <button class="track-submit-btn" onclick="submitTrackOrder()" data-i18n="track_order_submit">تتبع الآن</button>
+        </div>
+        <div id="track-order-result" class="track-status-box" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة فروع ومعارض المملكة (STORE LOCATOR MODAL) -->
+  <div class="modal-overlay" id="store-locator-modal">
+    <div class="modal-card stores-modal-card">
+      <button class="modal-close-btn" onclick="closeStoreLocatorModal()" aria-label="إغلاق">&times;</button>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+        <span style="font-size: 1.5rem;">📍</span>
+        <h3 style="font-family: var(--font-arabic-title); font-size: 1.35rem; font-weight: 800;" data-i18n="store_locator_title">معارضنا وفروعنا بالمملكة العربية السعودية</h3>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;" data-i18n="store_locator_desc">
+        تفضل بزيارة معارضنا الرسمية في الرياض، جدة، الدمام، مكة المكرمة والمدينة المنورة
+      </p>
+      <div class="stores-branches-grid">
+        <div class="branch-card-item">
+          <div>
+            <span class="branch-city-badge" data-i18n="branch_city_riyadh">الرياض</span>
+            <div class="branch-name" data-i18n="branch_name_riyadh">معرض العليا الرئيسي - برج المملكة</div>
+            <div class="branch-address" data-i18n="branch_addr_riyadh">طريق العليا العام، حي الورود، الرياض</div>
+            <div class="branch-hours" data-i18n="branch_hours_riyadh">🕒 يومياً: ٩:٠٠ ص - ١١:٣٠ م • هاتف: ٠١١٤٤٥٨٨٩٩</div>
+          </div>
+          <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn-sm btn-outline" style="padding: 8px 14px; font-size: 0.78rem;" data-i18n="branch_map_btn">الموقع على الخريطة</a>
+        </div>
+        <div class="branch-card-item">
+          <div>
+            <span class="branch-city-badge" data-i18n="branch_city_jeddah">جدة</span>
+            <div class="branch-name" data-i18n="branch_name_jeddah">معرض شارع التحلية - مول العرب</div>
+            <div class="branch-address" data-i18n="branch_addr_jeddah">طريق الأمير محمد بن عبدالعزيز (التحلية)، جدة</div>
+            <div class="branch-hours" data-i18n="branch_hours_jeddah">🕒 يومياً: ١٠:٠٠ ص - ١١:٠٠ م • هاتف: ٠١٢٦٦٨٨٤٤٢</div>
+          </div>
+          <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn-sm btn-outline" style="padding: 8px 14px; font-size: 0.78rem;" data-i18n="branch_map_btn">الموقع على الخريطة</a>
+        </div>
+        <div class="branch-card-item">
+          <div>
+            <span class="branch-city-badge" data-i18n="branch_city_dammam">الدمام والخبر</span>
+            <div class="branch-name" data-i18n="branch_name_dammam">معرض الراشد مول وكورنيش الخبر</div>
+            <div class="branch-address" data-i18n="branch_addr_dammam">مجمع الراشد، بوابة ٤، الخبر - المنطقة الشرقية</div>
+            <div class="branch-hours" data-i18n="branch_hours_dammam">🕒 يومياً: ٩:٣٠ ص - ١١:٠٠ م • هاتف: ٠١٣٨٩٤٤٥٥١</div>
+          </div>
+          <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn-sm btn-outline" style="padding: 8px 14px; font-size: 0.78rem;" data-i18n="branch_map_btn">الموقع على الخريطة</a>
+        </div>
+        <div class="branch-card-item">
+          <div>
+            <span class="branch-city-badge" data-i18n="branch_city_makkah">مكة المكرمة</span>
+            <div class="branch-name" data-i18n="branch_name_makkah">معرض أبراج البيت - وقف الملك عبدالعزيز</div>
+            <div class="branch-address" data-i18n="branch_addr_makkah">مجمع أبراج الساعة، الدور التجاري الثاني، مكة المكرمة</div>
+            <div class="branch-hours" data-i18n="branch_hours_makkah">🕒 يومياً: على مدار الساعة • هاتف: ٠١٢٥٧٢٢٣٣١</div>
+          </div>
+          <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn-sm btn-outline" style="padding: 8px 14px; font-size: 0.78rem;" data-i18n="branch_map_btn">الموقع على الخريطة</a>
+        </div>
+        <div class="branch-card-item">
+          <div>
+            <span class="branch-city-badge" data-i18n="branch_city_madinah">المدينة المنورة</span>
+            <div class="branch-name" data-i18n="branch_name_madinah">معرض المنطقة المركزية الشمالية</div>
+            <div class="branch-address" data-i18n="branch_addr_madinah">شارع الملك فهد، أمام الحرم النبوي الشريف</div>
+            <div class="branch-hours" data-i18n="branch_hours_madinah">🕒 يومياً: على مدار الساعة • هاتف: ٠١٤٨٣١١٢٢٠</div>
+          </div>
+          <a href="https://maps.google.com" target="_blank" rel="noopener" class="btn btn-sm btn-outline" style="padding: 8px 14px; font-size: 0.78rem;" data-i18n="branch_map_btn">الموقع على الخريطة</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- نافذة النظرة السريعة (QUICK VIEW) -->
   <div class="modal-overlay" id="quickview-modal">
@@ -840,9 +1289,81 @@
       <button class="modal-close-btn" onclick="closeWishlistModal()" aria-label="إغلاق">&times;</button>
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
         <span style="font-size: 1.4rem;">❤️</span>
-        <h3 style="font-family: var(--font-arabic-title); font-size: 1.35rem; font-weight: 800;">قائمة عطورك المفضلة</h3>
+        <h3 style="font-family: var(--font-arabic-title); font-size: 1.35rem; font-weight: 800;" data-i18n="wishlist_title">قائمة عطورك المفضلة</h3>
       </div>
       <div id="wishlist-items-container"></div>
+    </div>
+  </div>
+
+  <!-- نافذة الحساب: دخول أو إنشاء حساب -->
+  <div class="modal-overlay" id="account-modal" role="dialog" aria-modal="true" aria-labelledby="account-modal-title">
+    <div class="modal-card account-modal-card">
+      <button class="modal-close-btn" onclick="closeAccountModal()" aria-label="إغلاق">&times;</button>
+      <div class="account-modal-intro">
+        <span class="account-modal-icon">⚜️</span>
+        <div>
+          <span class="section-subtitle" data-i18n="account_eyebrow">بوابتك الملكية</span>
+          <h3 id="account-modal-title" data-i18n="account_title">حساب أطياب</h3>
+          <p data-i18n="account_intro">سجّل دخولك لمتابعة اختياراتك ومشترياتك المفضلة.</p>
+        </div>
+      </div>
+
+      <div class="account-tabs" id="account-tabs" role="tablist">
+        <button class="account-tab active" type="button" role="tab" aria-selected="true" data-account-mode="login" onclick="setAccountMode('login')" data-i18n="account_login_tab">تسجيل الدخول</button>
+        <button class="account-tab" type="button" role="tab" aria-selected="false" data-account-mode="signup" onclick="setAccountMode('signup')" data-i18n="account_signup_tab">إنشاء حساب</button>
+      </div>
+
+      <p class="account-form-message" id="account-form-message" role="status" aria-live="polite"></p>
+
+      <form class="account-panel active" id="account-login-form" data-account-panel="login" onsubmit="handleAccountLogin(event)">
+        <div class="form-group">
+          <label for="account-login-email" data-i18n="account_email_label">البريد الإلكتروني</label>
+          <input type="email" id="account-login-email" class="form-control" required autocomplete="email" data-i18n-placeholder="account_email_placeholder" placeholder="name@example.com" dir="ltr" />
+        </div>
+        <div class="form-group">
+          <label for="account-login-password" data-i18n="account_password_label">كلمة المرور</label>
+          <input type="password" id="account-login-password" class="form-control" required minlength="6" autocomplete="current-password" data-i18n-placeholder="account_password_placeholder" placeholder="6 أحرف على الأقل" />
+        </div>
+        <button type="submit" class="btn btn-primary account-submit" data-i18n="account_login_submit">دخول إلى حسابي</button>
+        <p class="account-switch-copy"><span data-i18n="account_no_account">ليس لديك حساب؟</span> <button type="button" onclick="setAccountMode('signup')" data-i18n="account_signup_tab">إنشاء حساب</button></p>
+      </form>
+
+      <form class="account-panel" id="account-signup-form" data-account-panel="signup" hidden onsubmit="handleAccountSignup(event)">
+        <div class="form-group">
+          <label for="account-signup-name" data-i18n="account_name_label">الاسم الكريم</label>
+          <input type="text" id="account-signup-name" class="form-control" required autocomplete="name" data-i18n-placeholder="account_name_placeholder" placeholder="مثال: محمد بن عبدالله" />
+        </div>
+        <div class="form-group">
+          <label for="account-signup-email" data-i18n="account_email_label">البريد الإلكتروني</label>
+          <input type="email" id="account-signup-email" class="form-control" required autocomplete="email" data-i18n-placeholder="account_email_placeholder" placeholder="name@example.com" dir="ltr" />
+        </div>
+        <div class="account-password-grid">
+          <div class="form-group">
+            <label for="account-signup-password" data-i18n="account_password_label">كلمة المرور</label>
+            <input type="password" id="account-signup-password" class="form-control" required minlength="6" autocomplete="new-password" data-i18n-placeholder="account_password_placeholder" placeholder="6 أحرف على الأقل" />
+          </div>
+          <div class="form-group">
+            <label for="account-signup-confirm-password" data-i18n="account_confirm_password_label">تأكيد كلمة المرور</label>
+            <input type="password" id="account-signup-confirm-password" class="form-control" required minlength="6" autocomplete="new-password" data-i18n-placeholder="account_confirm_password_placeholder" placeholder="أعد كتابة كلمة المرور" />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary account-submit" data-i18n="account_signup_submit">إنشاء حسابي</button>
+        <p class="account-switch-copy"><span data-i18n="account_have_account">لديك حساب بالفعل؟</span> <button type="button" onclick="setAccountMode('login')" data-i18n="account_login_tab">تسجيل الدخول</button></p>
+      </form>
+
+      <section class="account-panel account-signed-in" id="account-signed-in-panel" data-account-panel="signed-in" hidden>
+        <span class="account-signed-icon">👑</span>
+        <h4><span data-i18n="account_welcome">أهلاً بك،</span> <span class="account-signed-name"></span></h4>
+        <p data-i18n="account_signed_in_message">تم تسجيل دخولك إلى حساب أطياب.</p>
+        <span class="account-signed-email" dir="ltr"></span>
+        <div class="account-admin-link-box" style="margin: 14px 0 6px;" hidden>
+          <a href="admin.html" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; text-decoration: none; padding: 10px;">
+            <span>👑</span>
+            <span>لوحة تحكم المشرف (Admin Portal)</span>
+          </a>
+        </div>
+        <button type="button" class="btn btn-secondary account-logout" onclick="logoutAccount()" data-i18n="account_logout">تسجيل الخروج</button>
+      </section>
     </div>
   </div>
 
@@ -858,11 +1379,11 @@
   <div class="modal-overlay" id="search-modal">
     <div class="modal-card search-modal-card">
       <button class="modal-close-btn" onclick="closeSearchModal()" aria-label="إغلاق">&times;</button>
-      <h3 style="font-family: var(--font-arabic-title); font-size: 1.3rem; margin-bottom: 16px; font-weight: 800;">
+      <h3 style="font-family: var(--font-arabic-title); font-size: 1.3rem; margin-bottom: 16px; font-weight: 800;" data-i18n="search_title">
         البحث في عطور أطياب
       </h3>
       <div class="search-input-wrapper">
-        <input type="text" id="search-input-box" class="search-input-field" placeholder="ابحث باسم العطر أو المكونات (مثل: تايقر، نادر، ورد، عود)..." />
+        <input type="text" id="search-input-box" class="search-input-field" placeholder="ابحث باسم العطر أو المكونات (مثل: تايقر، نادر، ورد، عود)..." data-i18n-placeholder="search_placeholder" />
         <span class="search-icon-inside">🔍</span>
       </div>
       <div id="live-search-results" style="max-height: 380px; overflow-y: auto;"></div>
@@ -875,9 +1396,9 @@
       <button class="modal-close-btn" onclick="closeCheckoutModal()" aria-label="إغلاق">&times;</button>
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
         <span>👑</span>
-        <h3 style="font-family: var(--font-arabic-title); font-size: 1.45rem; font-weight: 800;">إتمام الطلب الملكي والشحن</h3>
+        <h3 style="font-family: var(--font-arabic-title); font-size: 1.45rem; font-weight: 800;" data-i18n="checkout_modal_title">إتمام الطلب الملكي والشحن</h3>
       </div>
-      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 16px;">
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 16px;" data-i18n="checkout_modal_desc">
         يرجى إدخال بيانات التوصيل بدقة لضمان وصول طلبك سريعاً وبأمان.
       </p>
 
@@ -885,58 +1406,58 @@
         <div class="checkout-grid">
           <div>
             <div class="form-group">
-              <label for="co-name">الاسم الكريم بالكامل *</label>
-              <input type="text" id="co-name" class="form-control" required placeholder="مثال: محمد بن عبدالله" />
+              <label for="co-name" data-i18n="co_name_label">الاسم الكريم بالكامل *</label>
+              <input type="text" id="co-name" class="form-control" required placeholder="مثال: محمد بن عبدالله" data-i18n-placeholder="co_name_placeholder" />
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
               <div class="form-group">
-                <label for="co-phone">رقم الجوال السعودي *</label>
+                <label for="co-phone" data-i18n="co_phone_label">رقم الجوال السعودي *</label>
                 <input type="tel" id="co-phone" class="form-control" required placeholder="05XXXXXXXX" dir="ltr" />
               </div>
               <div class="form-group">
-                <label for="co-email">البريد الإلكتروني *</label>
+                <label for="co-email" data-i18n="co_email_label">البريد الإلكتروني *</label>
                 <input type="email" id="co-email" class="form-control" required placeholder="name@example.com" dir="ltr" />
               </div>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
               <div class="form-group">
-                <label for="co-city">المدينة بالمملكة *</label>
+                <label for="co-city" data-i18n="co_city_label">المدينة بالمملكة *</label>
                 <select id="co-city" class="form-control" required>
-                  <option value="الرياض" selected>الرياض</option>
-                  <option value="جدة">جدة</option>
-                  <option value="مكة المكرمة">مكة المكرمة</option>
-                  <option value="المدينة المنورة">المدينة المنورة</option>
-                  <option value="الدمام">الدمام</option>
-                  <option value="الخبر">الخبر</option>
-                  <option value="القصيم">القصيم / بريدة</option>
-                  <option value="أبها">أبها / عسير</option>
-                  <option value="تبوك">تبوك</option>
-                  <option value="مدينة أخرى">مدينة أخرى بالمملكة</option>
+                  <option value="الرياض" selected data-i18n="co_city_riyadh">الرياض / Riyadh</option>
+                  <option value="جدة" data-i18n="co_city_jeddah">جدة / Jeddah</option>
+                  <option value="مكة المكرمة" data-i18n="co_city_makkah">مكة المكرمة / Makkah</option>
+                  <option value="المدينة المنورة" data-i18n="co_city_madinah">المدينة المنورة / Madinah</option>
+                  <option value="الدمام" data-i18n="co_city_dammam">الدمام / Dammam</option>
+                  <option value="الخبر" data-i18n="co_city_khobar">الخبر / Khobar</option>
+                  <option value="القصيم" data-i18n="co_city_qassim">القصيم / Qassim</option>
+                  <option value="أبها" data-i18n="co_city_abha">أبها / Abha</option>
+                  <option value="تبوك" data-i18n="co_city_tabuk">تبوك / Tabuk</option>
+                  <option value="مدينة أخرى" data-i18n="co_city_other">مدينة أخرى بالمملكة / Other</option>
                 </select>
               </div>
 
               <div class="form-group">
-                <label for="co-payment">طريقة الدفع المفضلة *</label>
+                <label for="co-payment" data-i18n="co_payment_label">طريقة الدفع المفضلة *</label>
                 <select id="co-payment" class="form-control" required>
-                  <option value="mada">بطاقة مدى البنكية (Mada)</option>
-                  <option value="applepay">آبل باي (Apple Pay)</option>
-                  <option value="credit">فيزا / ماستركارد</option>
-                  <option value="cod">الدفع نقداً عند الاستلام</option>
+                  <option value="mada" data-i18n="co_pay_mada">بطاقة مدى البنكية (Mada)</option>
+                  <option value="applepay" data-i18n="co_pay_apple">آبل باي (Apple Pay)</option>
+                  <option value="credit" data-i18n="co_pay_credit">فيزا / ماستركارد (Visa / MC)</option>
+                  <option value="cod" data-i18n="co_pay_cod">الدفع نقداً عند الاستلام (COD)</option>
                 </select>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="co-address">عنوان التوصيل والحي *</label>
-              <textarea id="co-address" class="form-control" rows="2" required placeholder="اسم الحي، الشارع، ورقم المبنى..."></textarea>
+              <label for="co-address" data-i18n="co_address_label">عنوان التوصيل والحي *</label>
+              <textarea id="co-address" class="form-control" rows="2" required placeholder="اسم الحي، الشارع، ورقم المبنى..." data-i18n-placeholder="co_address_placeholder"></textarea>
             </div>
           </div>
 
           <div>
             <div id="checkout-summary-box"></div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px; padding: 14px;">
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px; padding: 14px;" data-i18n="co_submit_btn">
               تأكيد الطلب وإرسال الشحنة 🚀
             </button>
           </div>
@@ -960,14 +1481,26 @@
      class="whatsapp-float" 
      target="_blank" 
      rel="noopener noreferrer" 
-     title="محادثة واتساب مباشرة">
-    <span class="whatsapp-tooltip">مستشار أطياب عبر الواتساب 💬</span>
+     title="محادثة واتساب مباشرة"
+     data-i18n-title="whatsapp_tooltip">
+    <span class="whatsapp-tooltip" data-i18n="whatsapp_tooltip">مستشار أطياب عبر الواتساب 💬</span>
     <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.073.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-10.416c-4.991 0-9.05 4.058-9.05 9.05 0 1.602.42 3.109 1.156 4.417l-1.226 4.478 4.606-1.208c1.261.688 2.709 1.081 4.249 1.081 4.991 0 9.05-4.058 9.05-9.05 0-4.992-4.059-9.05-9.05-9.05z"></path>
     </svg>
   </a>
 
-  <!-- Scripts: أولاً بيانات المنتجات ثم منطق المتجر -->
+  <!-- محرك سوبابيز السحابي (Supabase Cloud Backend) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/supabase.js"></script>
+
+  <!-- محرك فايربيس للمصادقة والمزامنة الحية (Firebase Auth & Firestore Backend) -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script defer src="js/firebase.js"></script>
+
+  <!-- Scripts: أولاً قاموس اللغات ثم بيانات المنتجات ثم منطق المتجر -->
+  <script src="js/translations.js"></script>
   <script src="js/products.js"></script>
   <script src="js/app.js"></script>
 </body>
